@@ -1,0 +1,100 @@
+import dotenv from 'dotenv';
+import { turso } from '../lib/turso';
+
+dotenv.config({ path: '.env.local' });
+
+const statements = [
+  `CREATE TABLE IF NOT EXISTS cuisines (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+  );`,
+  `CREATE TABLE IF NOT EXISTS tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+  );`,
+  `CREATE TABLE IF NOT EXISTS ingredients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+  );`,
+  `CREATE TABLE IF NOT EXISTS recipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    cuisine_id INTEGER,
+    category TEXT,
+    servings INTEGER,
+    yield_label TEXT,
+    total_time INTEGER,
+    active_time INTEGER,
+    rest_time INTEGER,
+    original_recipe_link TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cuisine_id) REFERENCES cuisines(id)
+  );`,
+  `CREATE TABLE IF NOT EXISTS steps (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    recipe_id INTEGER NOT NULL,
+    step_order INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  );`,
+  `CREATE TABLE IF NOT EXISTS recipe_ingredients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    recipe_id INTEGER NOT NULL,
+    ingredient_id INTEGER NOT NULL,
+    quantity REAL,
+    unit TEXT NOT NULL,
+    prep_note TEXT,
+    ingredient_order INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
+  );`,
+  `CREATE TABLE IF NOT EXISTS recipe_tags (
+    recipe_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    PRIMARY KEY (recipe_id, tag_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+  );`,
+  `CREATE TABLE IF NOT EXISTS units (
+    key TEXT PRIMARY KEY,
+    label TEXT NOT NULL UNIQUE
+  );`,
+  `INSERT OR IGNORE INTO units (key, label) VALUES
+    ('cup', 'cup'),
+    ('tbsp', 'tbsp'),
+    ('tsp', 'tsp'),
+    ('fl_oz', 'fl oz'),
+    ('oz', 'oz'),
+    ('lb', 'lb'),
+    ('g', 'g'),
+    ('kg', 'kg'),
+    ('mg', 'mg'),
+    ('ml', 'ml'),
+    ('l', 'l'),
+    ('clove', 'clove'),
+    ('pinch', 'pinch'),
+    ('dash', 'dash'),
+    ('can', 'can'),
+    ('package', 'package'),
+    ('whole', 'whole'),
+    ('each', 'each'),
+    ('to_taste', 'to taste'),
+    ('as_needed', 'as needed');`,
+];
+
+async function main() {
+  for (let index = 0; index < statements.length; index += 1) {
+    const statement = statements[index];
+    await turso.execute(statement);
+    console.log(`Executed migration step ${index + 1}/${statements.length}`);
+  }
+
+  console.log('Database schema ready.');
+}
+
+main().catch((error) => {
+  console.error('Migration failed:', error);
+  process.exit(1);
+});
