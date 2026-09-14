@@ -172,6 +172,12 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             />
           </FormField>
 
+          <FormField size="sm" label="Tags" htmlFor="recipe-tags">
+            <TagsInput id="recipe-tags" value={tags} onChange={setTags} />
+          </FormField>
+
+          <SectionDivider label="Time" />
+
           <FormField size="sm" label="Total time (min)" htmlFor="recipe-total-time" hint="Drives the time filter">
             <input
               id="recipe-total-time"
@@ -181,20 +187,6 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               className={[inputStyles.input, inputStyles.sm].join(' ')}
               value={totalTime}
               onChange={(event) => setTotalTime(event.target.value)}
-            />
-          </FormField>
-
-          <SectionDivider label="More details" />
-
-          <FormField size="sm" label="Servings" htmlFor="recipe-servings">
-            <input
-              id="recipe-servings"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              className={[inputStyles.input, inputStyles.sm].join(' ')}
-              value={servings}
-              onChange={(event) => setServings(event.target.value)}
             />
           </FormField>
           <FormField size="sm" label="Active time (min)" htmlFor="recipe-active-time">
@@ -219,6 +211,20 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setRestTime(event.target.value)}
             />
           </FormField>
+
+          <SectionDivider label="Servings & yield" />
+
+          <FormField size="sm" label="Servings" htmlFor="recipe-servings">
+            <input
+              id="recipe-servings"
+              type="number"
+              inputMode="numeric"
+              min="0"
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={servings}
+              onChange={(event) => setServings(event.target.value)}
+            />
+          </FormField>
           <FormField size="sm" label="Yield label" htmlFor="recipe-yield" hint="e.g. &ldquo;makes 24 cookies&rdquo;">
             <input
               id="recipe-yield"
@@ -228,6 +234,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setYieldLabel(event.target.value)}
             />
           </FormField>
+
           <FormField size="sm" label="Original recipe link" htmlFor="recipe-link">
             <input
               id="recipe-link"
@@ -237,10 +244,6 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setOriginalRecipeLink(event.target.value)}
               placeholder="https://…"
             />
-          </FormField>
-
-          <FormField size="sm" label="Tags" htmlFor="recipe-tags">
-            <TagsInput id="recipe-tags" value={tags} onChange={setTags} />
           </FormField>
         </aside>
 
