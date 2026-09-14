@@ -61,18 +61,6 @@ function IngredientRowFields({
   return (
     <li className={styles.ingredientRow}>
       <div className={styles.ingredientRowGrid}>
-        <label className={styles.srOnlyLabel} htmlFor={`${uid}-name`}>
-          Ingredient name
-        </label>
-        <ComboBoxInput
-          id={`${uid}-name`}
-          value={row.ingredient}
-          onChange={(newValue) => onUpdate({ ingredient: newValue })}
-          query={INGREDIENTS_QUERY}
-          dataKey="ingredients"
-          placeholder="Ingredient (e.g. Flour)"
-        />
-
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-qty`}>
           Quantity
         </label>
@@ -103,6 +91,18 @@ function IngredientRowFields({
             </option>
           ))}
         </select>
+
+        <label className={styles.srOnlyLabel} htmlFor={`${uid}-name`}>
+          Ingredient name
+        </label>
+        <ComboBoxInput
+          id={`${uid}-name`}
+          value={row.ingredient}
+          onChange={(newValue) => onUpdate({ ingredient: newValue })}
+          query={INGREDIENTS_QUERY}
+          dataKey="ingredients"
+          placeholder="Ingredient (e.g. Flour)"
+        />
 
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-prep`}>
           Prep note

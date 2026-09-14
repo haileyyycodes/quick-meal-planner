@@ -203,13 +203,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setRestTime(event.target.value)}
             />
           </FormField>
-          <FormField
-            fullWidth
-            size="sm"
-            label="Total time (min)"
-            htmlFor="recipe-total-time"
-            hint="Active + rest time · drives the time filter"
-          >
+          <FormField fullWidth size="sm" label="Total time (min)" htmlFor="recipe-total-time">
             <input
               id="recipe-total-time"
               type="text"
