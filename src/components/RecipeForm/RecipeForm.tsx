@@ -11,6 +11,7 @@ import { RichTextEditor } from '@/src/components/RichTextEditor';
 import { Button } from '@/src/components/ui/Button';
 import { ErrorState } from '@/src/components/ui/ErrorState';
 import { FormField } from '@/src/components/ui/FormField';
+import { Select } from '@/src/components/ui/Select';
 import { SectionDivider } from '@/src/components/ui/SectionDivider';
 import inputStyles from '@/src/components/ui/inputs.module.css';
 import { IngredientRows } from './IngredientRows';
@@ -149,19 +150,13 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
           </FormField>
 
           <FormField fullWidth size="sm" label="Category" htmlFor="recipe-category">
-            <select
+            <Select
               id="recipe-category"
-              className={[inputStyles.select, inputStyles.sm].join(' ')}
+              size="sm"
               value={category}
-              onChange={(event) => setCategory(event.target.value)}
-            >
-              <option value="">— None —</option>
-              {CATEGORIES.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              onChange={setCategory}
+              options={[{ value: '', label: '— None —' }, ...CATEGORIES.map((option) => ({ value: option, label: option }))]}
+            />
           </FormField>
 
           <FormField fullWidth size="sm" label="Cuisine" htmlFor="recipe-cuisine">

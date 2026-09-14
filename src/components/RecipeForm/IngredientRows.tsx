@@ -5,6 +5,7 @@ import { ComboBoxInput } from '@/src/components/ComboBoxInput';
 import { INGREDIENTS_QUERY } from '@/src/lib/graphql/documents';
 import { UNITS } from '@/src/lib/constants';
 import { Button } from '@/src/components/ui/Button';
+import { Select } from '@/src/components/ui/Select';
 import inputStyles from '@/src/components/ui/inputs.module.css';
 import { emptyIngredientRow, IngredientRowState } from './types';
 import styles from './RecipeForm.module.css';
@@ -79,18 +80,7 @@ function IngredientRowFields({
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-unit`}>
           Unit
         </label>
-        <select
-          id={`${uid}-unit`}
-          className={inputStyles.select}
-          value={row.unit}
-          onChange={(event) => onUpdate({ unit: event.target.value })}
-        >
-          {UNITS.map((unit) => (
-            <option key={unit.value} value={unit.value}>
-              {unit.label}
-            </option>
-          ))}
-        </select>
+        <Select id={`${uid}-unit`} value={row.unit} onChange={(unit) => onUpdate({ unit })} options={UNITS} />
 
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-name`}>
           Ingredient name

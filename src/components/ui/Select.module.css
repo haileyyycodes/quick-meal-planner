@@ -1,0 +1,122 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.trigger {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--easing-standard);
+}
+
+.trigger:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+}
+
+.trigger:focus-visible,
+.trigger[aria-expanded='true'] {
+  outline: none;
+  border-color: var(--color-focus-ring);
+}
+
+.trigger:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.invalid {
+  border-color: var(--color-danger);
+}
+
+.sm {
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.chevron {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -3px;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+
+.chevron[data-open] {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+
+.listbox {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  min-width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.active {
+  background: var(--color-surface-muted-alt);
+}
+
+.option[aria-selected='true'] {
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+}
+
+.check {
+  width: 14px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+}
