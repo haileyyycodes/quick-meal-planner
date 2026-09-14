@@ -226,7 +226,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setServings(event.target.value)}
             />
           </FormField>
-          <FormField size="sm" label="Yield label" htmlFor="recipe-yield" hint="e.g. &ldquo;makes 24 cookies&rdquo;">
+          <FormField size="sm" label="Yield label" htmlFor="recipe-yield">
             <input
               id="recipe-yield"
               type="text"
