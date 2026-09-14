@@ -84,14 +84,6 @@ function IngredientRowFields({
 
   return (
     <li className={styles.ingredientRow}>
-      <div className={styles.ingredientRowActions}>
-        <Button type="button" variant="ghost" onClick={onMoveUp} disabled={isFirst} aria-label={`Move ingredient ${index + 1} up`}>
-          ↑
-        </Button>
-        <Button type="button" variant="ghost" onClick={onMoveDown} disabled={isLast} aria-label={`Move ingredient ${index + 1} down`}>
-          ↓
-        </Button>
-      </div>
       <div className={styles.ingredientRowGrid}>
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-qty`}>
           Quantity
@@ -137,9 +129,33 @@ function IngredientRowFields({
           placeholder="Prep note (e.g. diced)"
         />
       </div>
-      <Button type="button" variant="ghost" onClick={onRemove} aria-label={`Remove ${row.ingredient || 'ingredient'} row`}>
-        Remove
-      </Button>
+      <div className={styles.ingredientRowTrailing}>
+        <div className={styles.reorderButtons}>
+          <Button
+            type="button"
+            variant="ghost"
+            className={styles.reorderButton}
+            onClick={onMoveUp}
+            disabled={isFirst}
+            aria-label={`Move ingredient ${index + 1} up`}
+          >
+            ↑
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className={styles.reorderButton}
+            onClick={onMoveDown}
+            disabled={isLast}
+            aria-label={`Move ingredient ${index + 1} down`}
+          >
+            ↓
+          </Button>
+        </div>
+        <Button type="button" variant="ghost" onClick={onRemove} aria-label={`Remove ${row.ingredient || 'ingredient'} row`}>
+          Remove
+        </Button>
+      </div>
     </li>
   );
 }
