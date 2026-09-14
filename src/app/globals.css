@@ -1,35 +1,106 @@
 :root {
-  --color-bg: #ffffff;
+  /* base neutrals — warm cream, not cool gray */
+  --cream-0: #fdfbf7;
+  --cream-1: #faf6ee;
+  --cream-2: #f3eee1;
+  --cream-3: #e8e1ce;
+  --cream-4: #d8cfb6;
+  --ink-0: #1f1b14;
+  --ink-1: #4a4436;
+  --ink-2: #7c7460;
+  --ink-3: #9c9480;
+
+  /* orange — primary action, warm rust */
+  --orange-50: #fbefe6;
+  --orange-300: #d98a55;
+  --orange-500: #a85c32;
+  --orange-600: #8f4b27;
+  --orange-700: #75391d;
+
+  /* green — secondary accent, calm sage */
+  --green-50: #eef2e7;
+  --green-300: #9ab07e;
+  --green-500: #5f7a4a;
+  --green-600: #4c6339;
+  --green-700: #3a4c2b;
+
+  /* red — destructive only */
+  --red-50: #fbeaea;
+  --red-500: #b33a3a;
+  --red-600: #9a2f2f;
+
+  /* semantic aliases — app code should use these, not the raw ramps above */
+  --color-bg: var(--cream-0);
   --color-surface: #ffffff;
-  --color-surface-muted: #f8f7f4;
-  --color-border: #dcd8d0;
-  --color-border-strong: #b8b2a6;
-  --color-text: #211d17;
-  --color-text-muted: #6b6558;
-  --color-primary: #8a4b2e;
-  --color-primary-hover: #723c22;
-  --color-primary-pressed: #5e3119;
-  --color-danger: #a12f2f;
-  --color-danger-hover: #862626;
-  --color-danger-surface: #fbeeee;
-  --color-focus-ring: #2f6fed;
-  --color-draft: #a06a1a;
-  --color-draft-surface: #fbf1de;
+  --color-surface-muted: var(--cream-1);
+  --color-surface-muted-alt: var(--cream-2);
+  --color-border: var(--cream-3);
+  --color-border-strong: var(--cream-4);
+  --color-text: var(--ink-0);
+  --color-text-secondary: var(--ink-1);
+  --color-text-muted: var(--ink-2);
+  --color-text-placeholder: var(--ink-3);
+  --color-text-on-accent: #ffffff;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --color-primary: var(--orange-500);
+  --color-primary-hover: var(--orange-600);
+  --color-primary-pressed: var(--orange-700);
+  --color-primary-tint: var(--orange-50);
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-8: 3rem;
+  --color-secondary-accent: var(--green-500);
+  --color-secondary-accent-hover: var(--green-600);
+  --color-secondary-accent-tint: var(--green-50);
 
-  --shadow-sm: 0 1px 2px rgba(33, 29, 23, 0.08);
-  --shadow-md: 0 4px 16px rgba(33, 29, 23, 0.12);
+  --color-danger: var(--red-500);
+  --color-danger-hover: var(--red-600);
+  --color-danger-surface: var(--red-50);
+
+  --color-draft: var(--orange-700);
+  --color-draft-surface: var(--orange-50);
+
+  --color-focus-ring: var(--orange-300);
+
+  /* typography — warm serif headlines over a humanist sans body */
+  --font-serif: var(--font-lora), Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-karla), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  --text-xs: 13px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-md: 18px;
+  --text-lg: 22px;
+  --text-xl: 28px;
+  --text-2xl: 36px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.6;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --shadow-sm: 0 1px 2px rgba(90, 58, 30, 0.06);
+  --shadow-card: 0 2px 8px rgba(90, 58, 30, 0.08);
+  --shadow-md: 0 12px 32px rgba(31, 27, 20, 0.18);
 
   --duration-fast: 120ms;
   --duration-base: 180ms;
@@ -51,15 +122,31 @@ html, body {
 body {
   background: var(--color-bg);
   color: var(--color-text);
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  line-height: var(--leading-normal);
 }
 
 main {
-  max-width: 72rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  padding: var(--space-8) var(--space-10);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  line-height: var(--leading-tight);
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  margin: 0 0 var(--space-2);
+}
+
+h2 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-3);
 }
 
 a {
@@ -80,6 +167,12 @@ button, input, select, textarea {
 
 :focus:not(:focus-visible) {
   outline: none;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: var(--space-6) var(--space-4) var(--space-8);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

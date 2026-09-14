@@ -5,8 +5,9 @@
 }
 
 .label {
-  font-weight: 600;
-  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  color: var(--color-text);
 }
 
 .required {
@@ -15,13 +16,13 @@
 
 .hint {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 12px;
   color: var(--color-text-muted);
 }
 
 .error {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 12px;
   color: var(--color-danger);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }

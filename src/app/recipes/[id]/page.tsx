@@ -13,6 +13,7 @@ import { ConfirmDialog } from '@/src/components/ui/ConfirmDialog';
 import { ErrorState } from '@/src/components/ui/ErrorState';
 import { EmptyState } from '@/src/components/ui/EmptyState';
 import { SkeletonList } from '@/src/components/ui/Skeleton';
+import { Tag } from '@/src/components/ui/Tag';
 import styles from './page.module.css';
 
 export default function RecipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -98,8 +99,8 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
           {recipe.tags.length > 0 && (
             <ul className={styles.tagList} aria-label="Tags">
               {recipe.tags.map((tag) => (
-                <li key={tag.id} className={styles.tag}>
-                  {tag.name}
+                <li key={tag.id}>
+                  <Tag>{tag.name}</Tag>
                 </li>
               ))}
             </ul>

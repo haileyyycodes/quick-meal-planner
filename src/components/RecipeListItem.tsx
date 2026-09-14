@@ -8,6 +8,7 @@ import type { Recipe } from '@/src/lib/graphql/types';
 import { DraftBadge } from './ui/DraftBadge';
 import { Button } from './ui/Button';
 import { ConfirmDialog } from './ui/ConfirmDialog';
+import { Tag } from './ui/Tag';
 import styles from './RecipeListItem.module.css';
 
 type RecipeListItemProps = {
@@ -44,8 +45,14 @@ export function RecipeListItem({ recipe }: RecipeListItemProps) {
           {recipe.category && <span>{recipe.category}</span>}
           {recipe.cuisine && <span>{recipe.cuisine.name}</span>}
           {recipe.totalTime != null && <span>{recipe.totalTime} min</span>}
-          {recipe.tags.length > 0 && <span>{recipe.tags.map((tag) => tag.name).join(', ')}</span>}
         </div>
+        {recipe.tags.length > 0 && (
+          <div className={styles.tags}>
+            {recipe.tags.map((tag) => (
+              <Tag key={tag.id}>{tag.name}</Tag>
+            ))}
+          </div>
+        )}
       </Link>
       <div className={styles.actions}>
         <Link href={`/recipes/${recipe.id}/edit`} className={styles.editLink}>
