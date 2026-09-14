@@ -7,7 +7,7 @@ import { RECIPES_QUERY } from '@/src/lib/graphql/documents';
 import type { Recipe, RecipeFilterInput } from '@/src/lib/graphql/types';
 import { useDebouncedValue } from '@/src/lib/useDebouncedValue';
 import { EMPTY_FILTERS, FiltersState, hasActiveFilters, RecipeFilters } from '@/src/components/RecipeFilters';
-import { RecipeListItem } from '@/src/components/RecipeListItem';
+import { RecipeTable } from '@/src/components/RecipeTable';
 import { SkeletonList } from '@/src/components/ui/Skeleton';
 import { ErrorState } from '@/src/components/ui/ErrorState';
 import { EmptyState } from '@/src/components/ui/EmptyState';
@@ -84,13 +84,7 @@ export default function RecipeListPage() {
         </p>
       )}
 
-      {!isInitialLoad && !error && recipes.length > 0 && (
-        <ul className={styles.list}>
-          {recipes.map((recipe) => (
-            <RecipeListItem key={recipe.id} recipe={recipe} />
-          ))}
-        </ul>
-      )}
+      {!isInitialLoad && !error && recipes.length > 0 && <RecipeTable recipes={recipes} />}
     </main>
   );
 }
