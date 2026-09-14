@@ -6,6 +6,7 @@ import { ComboBoxInput } from './ComboBoxInput';
 import { TagsInput } from './TagsInput';
 import { Button } from './ui/Button';
 import { FormField } from './ui/FormField';
+import { Select } from './ui/Select';
 import inputStyles from './ui/inputs.module.css';
 import styles from './RecipeFilters.module.css';
 
@@ -83,35 +84,21 @@ export function RecipeFilters({ value, onChange }: RecipeFiltersProps) {
         </FormField>
 
         <FormField label="Category" htmlFor="filter-category">
-          <select
+          <Select
             id="filter-category"
-            className={inputStyles.select}
             value={value.category}
-            onChange={(event) => update({ category: event.target.value })}
-          >
-            <option value="">Any category</option>
-            {CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+            onChange={(category) => update({ category })}
+            options={[{ value: '', label: 'Any category' }, ...CATEGORIES.map((category) => ({ value: category, label: category }))]}
+          />
         </FormField>
 
         <FormField label="Total time" htmlFor="filter-time">
-          <select
+          <Select
             id="filter-time"
-            className={inputStyles.select}
             value={value.timeBucket}
-            onChange={(event) => update({ timeBucket: event.target.value })}
-          >
-            <option value="">Any time</option>
-            {TIME_BUCKETS.map((bucket) => (
-              <option key={bucket.value} value={bucket.value}>
-                {bucket.label}
-              </option>
-            ))}
-          </select>
+            onChange={(timeBucket) => update({ timeBucket })}
+            options={[{ value: '', label: 'Any time' }, ...TIME_BUCKETS]}
+          />
         </FormField>
       </div>
 

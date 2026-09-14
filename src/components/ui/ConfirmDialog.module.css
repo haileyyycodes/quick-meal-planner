@@ -30,7 +30,9 @@
 
 .title {
   margin: 0 0 var(--space-2);
-  font-size: 1.125rem;
+  font-family: var(--font-serif);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
 }
 
 .description {
