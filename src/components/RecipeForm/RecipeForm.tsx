@@ -126,29 +126,29 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {submitError && <ErrorState message={submitError} />}
 
-      <section className={styles.section}>
-        <FormField label="Name" htmlFor="recipe-name" required error={nameError ?? undefined} errorId="recipe-name-error">
-          <input
-            ref={nameInputRef}
-            id="recipe-name"
-            type="text"
-            className={[inputStyles.input, nameError ? inputStyles.invalid : ''].join(' ')}
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-              if (nameError) setNameError(null);
-            }}
-            aria-required="true"
-            aria-invalid={!!nameError}
-            aria-describedby={nameError ? 'recipe-name-error' : undefined}
-          />
-        </FormField>
+      <div className={styles.layout}>
+        <aside className={styles.sidebar} aria-label="Recipe details">
+          <FormField label="Name" htmlFor="recipe-name" required error={nameError ?? undefined} errorId="recipe-name-error">
+            <input
+              ref={nameInputRef}
+              id="recipe-name"
+              type="text"
+              className={[inputStyles.input, nameError ? inputStyles.invalid : ''].join(' ')}
+              value={name}
+              onChange={(event) => {
+                setName(event.target.value);
+                if (nameError) setNameError(null);
+              }}
+              aria-required="true"
+              aria-invalid={!!nameError}
+              aria-describedby={nameError ? 'recipe-name-error' : undefined}
+            />
+          </FormField>
 
-        <div className={styles.grid3}>
-          <FormField label="Category" htmlFor="recipe-category">
+          <FormField size="sm" label="Category" htmlFor="recipe-category">
             <select
               id="recipe-category"
-              className={inputStyles.select}
+              className={[inputStyles.select, inputStyles.sm].join(' ')}
               value={category}
               onChange={(event) => setCategory(event.target.value)}
             >
@@ -161,7 +161,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             </select>
           </FormField>
 
-          <FormField label="Cuisine" htmlFor="recipe-cuisine">
+          <FormField size="sm" label="Cuisine" htmlFor="recipe-cuisine">
             <ComboBoxInput
               id="recipe-cuisine"
               value={cuisine}
@@ -172,22 +172,20 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             />
           </FormField>
 
-          <FormField label="Total time (min)" htmlFor="recipe-total-time" hint="Drives the time filter">
+          <FormField size="sm" label="Total time (min)" htmlFor="recipe-total-time" hint="Drives the time filter">
             <input
               id="recipe-total-time"
               type="number"
               inputMode="numeric"
               min="0"
-              className={inputStyles.input}
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
               value={totalTime}
               onChange={(event) => setTotalTime(event.target.value)}
             />
           </FormField>
-        </div>
 
-        <SectionDivider label="More details" />
+          <SectionDivider label="More details" />
 
-        <div className={styles.grid3}>
           <FormField size="sm" label="Servings" htmlFor="recipe-servings">
             <input
               id="recipe-servings"
@@ -240,36 +238,38 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               placeholder="https://…"
             />
           </FormField>
+
+          <FormField size="sm" label="Tags" htmlFor="recipe-tags">
+            <TagsInput id="recipe-tags" value={tags} onChange={setTags} />
+          </FormField>
+        </aside>
+
+        <div className={styles.main}>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Ingredients</h2>
+            <IngredientRows value={ingredients} onChange={setIngredients} />
+          </section>
+
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Steps</h2>
+            <StepsEditor value={steps} onChange={setSteps} />
+          </section>
+
+          <section className={styles.section}>
+            <FormField label="Notes" htmlFor="recipe-notes">
+              <RichTextEditor id="recipe-notes" value={notes} onChange={setNotes} ariaLabel="Notes" placeholder="Any notes…" />
+            </FormField>
+          </section>
+
+          <div className={styles.formActions}>
+            <Link href={cancelHref} className={styles.cancelLink}>
+              Cancel
+            </Link>
+            <Button type="submit" variant="primary" pending={pending} pendingLabel={submitPendingLabel}>
+              {submitLabel}
+            </Button>
+          </div>
         </div>
-
-        <FormField label="Tags" htmlFor="recipe-tags">
-          <TagsInput id="recipe-tags" value={tags} onChange={setTags} />
-        </FormField>
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Ingredients</h2>
-        <IngredientRows value={ingredients} onChange={setIngredients} />
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Steps</h2>
-        <StepsEditor value={steps} onChange={setSteps} />
-      </section>
-
-      <section className={styles.section}>
-        <FormField label="Notes" htmlFor="recipe-notes">
-          <RichTextEditor id="recipe-notes" value={notes} onChange={setNotes} ariaLabel="Notes" placeholder="Any notes…" />
-        </FormField>
-      </section>
-
-      <div className={styles.formActions}>
-        <Link href={cancelHref} className={styles.cancelLink}>
-          Cancel
-        </Link>
-        <Button type="submit" variant="primary" pending={pending} pendingLabel={submitPendingLabel}>
-          {submitLabel}
-        </Button>
       </div>
     </form>
   );
