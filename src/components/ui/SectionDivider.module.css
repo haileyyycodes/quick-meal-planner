@@ -1,4 +1,5 @@
 .divider {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: var(--space-3);

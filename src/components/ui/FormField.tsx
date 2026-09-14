@@ -10,6 +10,7 @@ type FormFieldProps = {
   error?: string;
   errorId?: string;
   size?: 'md' | 'sm';
+  fullWidth?: boolean;
   children: ReactNode;
 };
 
@@ -22,10 +23,11 @@ export function FormField({
   error,
   errorId,
   size = 'md',
+  fullWidth,
   children,
 }: FormFieldProps) {
   return (
-    <div className={styles.field}>
+    <div className={fullWidth ? `${styles.field} ${styles.fullWidth}` : styles.field}>
       <label htmlFor={htmlFor} className={size === 'sm' ? styles.labelSm : styles.label}>
         {label}
         {required && (

@@ -56,7 +56,6 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
   const [cuisine, setCuisine] = useState(initialRecipe?.cuisine?.name ?? '');
   const [servings, setServings] = useState(initialRecipe?.servings != null ? String(initialRecipe.servings) : '');
   const [yieldLabel, setYieldLabel] = useState(initialRecipe?.yieldLabel ?? '');
-  const [totalTime, setTotalTime] = useState(initialRecipe?.totalTime != null ? String(initialRecipe.totalTime) : '');
   const [activeTime, setActiveTime] = useState(initialRecipe?.activeTime != null ? String(initialRecipe.activeTime) : '');
   const [restTime, setRestTime] = useState(initialRecipe?.restTime != null ? String(initialRecipe.restTime) : '');
   const [originalRecipeLink, setOriginalRecipeLink] = useState(initialRecipe?.originalRecipeLink ?? '');
@@ -76,6 +75,10 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
     return Number.isNaN(parsed) ? null : parsed;
   };
 
+  const activeMinutes = parseNumber(activeTime);
+  const restMinutes = parseNumber(restTime);
+  const totalTime = activeMinutes == null && restMinutes == null ? null : (activeMinutes ?? 0) + (restMinutes ?? 0);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -94,9 +97,9 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
       cuisine: cuisine.trim() || null,
       servings: parseNumber(servings),
       yieldLabel: yieldLabel.trim() || null,
-      totalTime: parseNumber(totalTime),
-      activeTime: parseNumber(activeTime),
-      restTime: parseNumber(restTime),
+      totalTime,
+      activeTime: activeMinutes,
+      restTime: restMinutes,
       originalRecipeLink: originalRecipeLink.trim() || null,
       notes: notes && notes !== '<p></p>' ? notes : null,
       tags,
@@ -128,7 +131,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
 
       <div className={styles.layout}>
         <aside className={styles.sidebar} aria-label="Recipe details">
-          <FormField label="Name" htmlFor="recipe-name" required error={nameError ?? undefined} errorId="recipe-name-error">
+          <FormField fullWidth label="Name" htmlFor="recipe-name" required error={nameError ?? undefined} errorId="recipe-name-error">
             <input
               ref={nameInputRef}
               id="recipe-name"
@@ -145,7 +148,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             />
           </FormField>
 
-          <FormField size="sm" label="Category" htmlFor="recipe-category">
+          <FormField fullWidth size="sm" label="Category" htmlFor="recipe-category">
             <select
               id="recipe-category"
               className={[inputStyles.select, inputStyles.sm].join(' ')}
@@ -161,7 +164,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             </select>
           </FormField>
 
-          <FormField size="sm" label="Cuisine" htmlFor="recipe-cuisine">
+          <FormField fullWidth size="sm" label="Cuisine" htmlFor="recipe-cuisine">
             <ComboBoxInput
               id="recipe-cuisine"
               value={cuisine}
@@ -172,23 +175,12 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             />
           </FormField>
 
-          <FormField size="sm" label="Tags" htmlFor="recipe-tags">
+          <FormField fullWidth size="sm" label="Tags" htmlFor="recipe-tags">
             <TagsInput id="recipe-tags" value={tags} onChange={setTags} />
           </FormField>
 
           <SectionDivider label="Time" />
 
-          <FormField size="sm" label="Total time (min)" htmlFor="recipe-total-time" hint="Drives the time filter">
-            <input
-              id="recipe-total-time"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              className={[inputStyles.input, inputStyles.sm].join(' ')}
-              value={totalTime}
-              onChange={(event) => setTotalTime(event.target.value)}
-            />
-          </FormField>
           <FormField size="sm" label="Active time (min)" htmlFor="recipe-active-time">
             <input
               id="recipe-active-time"
@@ -209,6 +201,21 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               className={[inputStyles.input, inputStyles.sm].join(' ')}
               value={restTime}
               onChange={(event) => setRestTime(event.target.value)}
+            />
+          </FormField>
+          <FormField
+            fullWidth
+            size="sm"
+            label="Total time (min)"
+            htmlFor="recipe-total-time"
+            hint="Active + rest time · drives the time filter"
+          >
+            <input
+              id="recipe-total-time"
+              type="text"
+              disabled
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={totalTime != null ? String(totalTime) : ''}
             />
           </FormField>
 
@@ -235,7 +242,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
             />
           </FormField>
 
-          <FormField size="sm" label="Original recipe link" htmlFor="recipe-link">
+          <FormField fullWidth size="sm" label="Original recipe link" htmlFor="recipe-link">
             <input
               id="recipe-link"
               type="url"
