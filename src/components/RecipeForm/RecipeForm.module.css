@@ -21,12 +21,6 @@
   font-size: var(--text-lg);
 }
 
-.grid2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-4);
-}
-
 .grid3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));

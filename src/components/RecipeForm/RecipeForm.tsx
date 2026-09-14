@@ -11,6 +11,7 @@ import { RichTextEditor } from '@/src/components/RichTextEditor';
 import { Button } from '@/src/components/ui/Button';
 import { ErrorState } from '@/src/components/ui/ErrorState';
 import { FormField } from '@/src/components/ui/FormField';
+import { SectionDivider } from '@/src/components/ui/SectionDivider';
 import inputStyles from '@/src/components/ui/inputs.module.css';
 import { IngredientRows } from './IngredientRows';
 import { StepsEditor } from './StepsEditor';
@@ -143,7 +144,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
           />
         </FormField>
 
-        <div className={styles.grid2}>
+        <div className={styles.grid3}>
           <FormField label="Category" htmlFor="recipe-category">
             <select
               id="recipe-category"
@@ -170,42 +171,7 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               placeholder="e.g. Mexican"
             />
           </FormField>
-        </div>
 
-        <div className={styles.grid3}>
-          <FormField label="Servings" htmlFor="recipe-servings">
-            <input
-              id="recipe-servings"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              className={inputStyles.input}
-              value={servings}
-              onChange={(event) => setServings(event.target.value)}
-            />
-          </FormField>
-          <FormField label="Yield label" htmlFor="recipe-yield" hint="e.g. &ldquo;makes 24 cookies&rdquo;">
-            <input
-              id="recipe-yield"
-              type="text"
-              className={inputStyles.input}
-              value={yieldLabel}
-              onChange={(event) => setYieldLabel(event.target.value)}
-            />
-          </FormField>
-          <FormField label="Original recipe link" htmlFor="recipe-link">
-            <input
-              id="recipe-link"
-              type="url"
-              className={inputStyles.input}
-              value={originalRecipeLink}
-              onChange={(event) => setOriginalRecipeLink(event.target.value)}
-              placeholder="https://…"
-            />
-          </FormField>
-        </div>
-
-        <div className={styles.grid3}>
           <FormField label="Total time (min)" htmlFor="recipe-total-time" hint="Drives the time filter">
             <input
               id="recipe-total-time"
@@ -217,26 +183,61 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setTotalTime(event.target.value)}
             />
           </FormField>
-          <FormField label="Active time (min)" htmlFor="recipe-active-time">
+        </div>
+
+        <SectionDivider label="More details" />
+
+        <div className={styles.grid3}>
+          <FormField size="sm" label="Servings" htmlFor="recipe-servings">
+            <input
+              id="recipe-servings"
+              type="number"
+              inputMode="numeric"
+              min="0"
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={servings}
+              onChange={(event) => setServings(event.target.value)}
+            />
+          </FormField>
+          <FormField size="sm" label="Active time (min)" htmlFor="recipe-active-time">
             <input
               id="recipe-active-time"
               type="number"
               inputMode="numeric"
               min="0"
-              className={inputStyles.input}
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
               value={activeTime}
               onChange={(event) => setActiveTime(event.target.value)}
             />
           </FormField>
-          <FormField label="Rest time (min)" htmlFor="recipe-rest-time">
+          <FormField size="sm" label="Rest time (min)" htmlFor="recipe-rest-time">
             <input
               id="recipe-rest-time"
               type="number"
               inputMode="numeric"
               min="0"
-              className={inputStyles.input}
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
               value={restTime}
               onChange={(event) => setRestTime(event.target.value)}
+            />
+          </FormField>
+          <FormField size="sm" label="Yield label" htmlFor="recipe-yield" hint="e.g. &ldquo;makes 24 cookies&rdquo;">
+            <input
+              id="recipe-yield"
+              type="text"
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={yieldLabel}
+              onChange={(event) => setYieldLabel(event.target.value)}
+            />
+          </FormField>
+          <FormField size="sm" label="Original recipe link" htmlFor="recipe-link">
+            <input
+              id="recipe-link"
+              type="url"
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={originalRecipeLink}
+              onChange={(event) => setOriginalRecipeLink(event.target.value)}
+              placeholder="https://…"
             />
           </FormField>
         </div>

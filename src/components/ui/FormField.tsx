@@ -9,13 +9,24 @@ type FormFieldProps = {
   hintId?: string;
   error?: string;
   errorId?: string;
+  size?: 'md' | 'sm';
   children: ReactNode;
 };
 
-export function FormField({ label, htmlFor, required, hint, hintId, error, errorId, children }: FormFieldProps) {
+export function FormField({
+  label,
+  htmlFor,
+  required,
+  hint,
+  hintId,
+  error,
+  errorId,
+  size = 'md',
+  children,
+}: FormFieldProps) {
   return (
     <div className={styles.field}>
-      <label htmlFor={htmlFor} className={styles.label}>
+      <label htmlFor={htmlFor} className={size === 'sm' ? styles.labelSm : styles.label}>
         {label}
         {required && (
           <span aria-hidden="true" className={styles.required}>
@@ -24,11 +35,7 @@ export function FormField({ label, htmlFor, required, hint, hintId, error, error
           </span>
         )}
       </label>
-      {hint && (
-        <p id={hintId} className={styles.hint}>
-          {hint}
-        </p>
-      )}
+      {hint && <p id={hintId} className={size === 'sm' ? styles.hintSm : styles.hint}>{hint}</p>}
       {children}
       {error && (
         <p id={errorId} className={styles.error} role="alert">
