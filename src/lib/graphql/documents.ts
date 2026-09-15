@@ -34,7 +34,8 @@ export const RECIPE_QUERY = gql`
       name
       category
       servings
-      yieldLabel
+      yieldQuantity
+      yieldUnit
       totalTime
       activeTime
       restTime

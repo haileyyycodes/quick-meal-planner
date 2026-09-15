@@ -7,6 +7,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { DELETE_RECIPE_MUTATION, RECIPE_QUERY } from '@/src/lib/graphql/documents';
 import type { Recipe } from '@/src/lib/graphql/types';
 import { sanitizeRichText } from '@/src/lib/sanitizeHtml';
+import { pluralizeUnit } from '@/src/lib/constants';
 import { DraftBadge } from '@/src/components/ui/DraftBadge';
 import { Button } from '@/src/components/ui/Button';
 import { ConfirmDialog } from '@/src/components/ui/ConfirmDialog';
@@ -89,7 +90,12 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
             {recipe.category && <span>{recipe.category}</span>}
             {recipe.cuisine && <span>{recipe.cuisine.name}</span>}
             {recipe.servings != null && <span>Serves {recipe.servings}</span>}
-            {recipe.yieldLabel && <span>{recipe.yieldLabel}</span>}
+            {recipe.yieldQuantity != null && (
+              <span>
+                Makes {recipe.yieldQuantity}
+                {recipe.yieldUnit ? ` ${pluralizeUnit(recipe.yieldUnit, recipe.yieldQuantity)}` : ''}
+              </span>
+            )}
           </div>
           <div className={styles.meta}>
             {recipe.totalTime != null && <span>Total: {recipe.totalTime} min</span>}
@@ -138,7 +144,7 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
             {recipe.ingredients.map((item) => (
               <li key={item.id}>
                 {item.quantity != null && <span>{item.quantity} </span>}
-                <span>{item.unit !== 'each' ? `${item.unit} ` : ''}</span>
+                <span>{item.unit !== 'each' ? `${pluralizeUnit(item.unit, item.quantity)} ` : ''}</span>
                 <span>{item.ingredient.name}</span>
                 {item.prepNote && <span className={styles.prepNote}> ({item.prepNote})</span>}
               </li>

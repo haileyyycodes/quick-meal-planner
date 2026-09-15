@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from 'react';
 import Link from 'next/link';
-import { CATEGORIES } from '@/src/lib/constants';
+import { CATEGORIES, UNITS } from '@/src/lib/constants';
 import type { Recipe, RecipeInput } from '@/src/lib/graphql/types';
 import { CUISINES_QUERY } from '@/src/lib/graphql/documents';
 import { ComboBoxInput } from '@/src/components/ComboBoxInput';
@@ -56,7 +56,10 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
   const [category, setCategory] = useState(initialRecipe?.category ?? '');
   const [cuisine, setCuisine] = useState(initialRecipe?.cuisine?.name ?? '');
   const [servings, setServings] = useState(initialRecipe?.servings != null ? String(initialRecipe.servings) : '');
-  const [yieldLabel, setYieldLabel] = useState(initialRecipe?.yieldLabel ?? '');
+  const [yieldQuantity, setYieldQuantity] = useState(
+    initialRecipe?.yieldQuantity != null ? String(initialRecipe.yieldQuantity) : ''
+  );
+  const [yieldUnit, setYieldUnit] = useState(initialRecipe?.yieldUnit ?? '');
   const [activeTime, setActiveTime] = useState(initialRecipe?.activeTime != null ? String(initialRecipe.activeTime) : '');
   const [restTime, setRestTime] = useState(initialRecipe?.restTime != null ? String(initialRecipe.restTime) : '');
   const [originalRecipeLink, setOriginalRecipeLink] = useState(initialRecipe?.originalRecipeLink ?? '');
@@ -97,7 +100,8 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
       category: category ? (category as RecipeInput['category']) : null,
       cuisine: cuisine.trim() || null,
       servings: parseNumber(servings),
-      yieldLabel: yieldLabel.trim() || null,
+      yieldQuantity: parseNumber(yieldQuantity),
+      yieldUnit: yieldUnit.trim() || null,
       totalTime,
       activeTime: activeMinutes,
       restTime: restMinutes,
@@ -221,14 +225,30 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
               onChange={(event) => setServings(event.target.value)}
             />
           </FormField>
-          <FormField size="sm" label="Yield label" htmlFor="recipe-yield">
-            <input
-              id="recipe-yield"
-              type="text"
-              className={[inputStyles.input, inputStyles.sm].join(' ')}
-              value={yieldLabel}
-              onChange={(event) => setYieldLabel(event.target.value)}
-            />
+          <FormField fullWidth size="sm" label="Yield" htmlFor="recipe-yield-quantity">
+            <div className={styles.yieldRow}>
+              <input
+                id="recipe-yield-quantity"
+                type="number"
+                inputMode="decimal"
+                step="any"
+                min="0"
+                className={[inputStyles.input, inputStyles.sm].join(' ')}
+                value={yieldQuantity}
+                onChange={(event) => setYieldQuantity(event.target.value)}
+                placeholder="Qty"
+              />
+              <label className={styles.srOnlyLabel} htmlFor="recipe-yield-unit">
+                Yield unit
+              </label>
+              <Select
+                id="recipe-yield-unit"
+                size="sm"
+                value={yieldUnit}
+                onChange={setYieldUnit}
+                options={[{ value: '', label: '— None —' }, ...UNITS]}
+              />
+            </div>
           </FormField>
 
           <FormField fullWidth size="sm" label="Original recipe link" htmlFor="recipe-link">

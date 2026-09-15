@@ -25,7 +25,8 @@ export type Recipe = {
   category: Category | null;
   cuisine: NamedEntity | null;
   servings: number | null;
-  yieldLabel: string | null;
+  yieldQuantity: number | null;
+  yieldUnit: string | null;
   totalTime: number | null;
   activeTime: number | null;
   restTime: number | null;
@@ -63,7 +64,8 @@ export type RecipeInput = {
   category: Category | null;
   cuisine: string | null;
   servings: number | null;
-  yieldLabel: string | null;
+  yieldQuantity: number | null;
+  yieldUnit: string | null;
   totalTime: number | null;
   activeTime: number | null;
   restTime: number | null;
