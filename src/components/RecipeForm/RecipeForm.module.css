@@ -98,6 +98,30 @@
   gap: var(--space-2);
 }
 
+.ingredientRowTrailing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.reorderButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.reorderButton.reorderButton {
+  min-height: 28px;
+  min-width: 28px;
+  padding: 0;
+  font-size: var(--text-xs);
+}
+
+.yieldRow {
+  display: grid;
+  grid-template-columns: 0.8fr 1.4fr;
+  gap: var(--space-2);
+}
+
 .srOnlyLabel {
   position: absolute;
   width: 1px;
@@ -184,5 +208,9 @@
 
   .ingredientRowGrid {
     grid-template-columns: 1fr;
+  }
+
+  .ingredientRowTrailing {
+    justify-content: flex-end;
   }
 }

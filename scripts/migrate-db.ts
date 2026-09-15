@@ -22,7 +22,8 @@ const statements = [
     cuisine_id INTEGER,
     category TEXT,
     servings INTEGER,
-    yield_label TEXT,
+    yield_quantity REAL,
+    yield_unit TEXT,
     total_time INTEGER,
     active_time INTEGER,
     rest_time INTEGER,
@@ -84,11 +85,34 @@ const statements = [
     ('as_needed', 'as needed');`,
 ];
 
+// Schema changes to existing tables. ALTER TABLE isn't idempotent like CREATE TABLE IF NOT EXISTS,
+// so each statement is run individually and a "column already exists"/"no such column" error is
+// swallowed to keep this script safe to re-run.
+const alterStatements = [
+  `ALTER TABLE recipes ADD COLUMN yield_quantity REAL;`,
+  `ALTER TABLE recipes ADD COLUMN yield_unit TEXT;`,
+  `ALTER TABLE recipes DROP COLUMN yield_label;`,
+];
+
 async function main() {
   for (let index = 0; index < statements.length; index += 1) {
     const statement = statements[index];
     await turso.execute(statement);
     console.log(`Executed migration step ${index + 1}/${statements.length}`);
+  }
+
+  for (const statement of alterStatements) {
+    try {
+      await turso.execute(statement);
+      console.log(`Executed alter statement: ${statement.trim()}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (/duplicate column name|no such column/i.test(message)) {
+        console.log(`Skipped (already applied): ${statement.trim()}`);
+      } else {
+        throw error;
+      }
+    }
   }
 
   console.log('Database schema ready.');

@@ -48,7 +48,8 @@ const typeDefs = `
     category: Category
     cuisine: String
     servings: Int
-    yieldLabel: String
+    yieldQuantity: Float
+    yieldUnit: String
     totalTime: Int
     activeTime: Int
     restTime: Int
@@ -77,7 +78,8 @@ const typeDefs = `
     category: String
     cuisine: Cuisine
     servings: Int
-    yieldLabel: String
+    yieldQuantity: Float
+    yieldUnit: String
     totalTime: Int
     activeTime: Int
     restTime: Int
@@ -145,7 +147,8 @@ type RecipeInputShape = {
   category?: string | null;
   cuisine?: string | null;
   servings?: number | null;
-  yieldLabel?: string | null;
+  yieldQuantity?: number | null;
+  yieldUnit?: string | null;
   totalTime?: number | null;
   activeTime?: number | null;
   restTime?: number | null;
@@ -171,7 +174,8 @@ const getRecipeBaseFields = (row: Record<string, unknown>) => ({
   name: String(row.name),
   category: toString(row.category),
   servings: toNumber(row.servings),
-  yieldLabel: toString(row.yield_label),
+  yieldQuantity: toNumber(row.yield_quantity),
+  yieldUnit: toString(row.yield_unit),
   totalTime: toNumber(row.totalTime),
   activeTime: toNumber(row.activeTime),
   restTime: toNumber(row.restTime),
@@ -309,7 +313,7 @@ const clearRecipeChildren = async (recipeId: number) => {
 };
 
 const RECIPE_BASE_SELECT = `
-  SELECT r.id, r.name, r.category, r.servings, r.yield_label, r.total_time AS totalTime,
+  SELECT r.id, r.name, r.category, r.servings, r.yield_quantity, r.yield_unit, r.total_time AS totalTime,
          r.active_time AS activeTime, r.rest_time AS restTime, r.original_recipe_link,
          r.notes, c.id AS cuisine_id, c.name AS cuisine_name
   FROM recipes r
@@ -402,16 +406,17 @@ const resolvers = {
       const recipeInsert = await turso.execute({
         sql: `
           INSERT INTO recipes (
-            name, category, cuisine_id, servings, yield_label, total_time,
+            name, category, cuisine_id, servings, yield_quantity, yield_unit, total_time,
             active_time, rest_time, original_recipe_link, notes
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
           args.input.category ?? null,
           cuisineId,
           args.input.servings ?? null,
-          args.input.yieldLabel ?? null,
+          args.input.yieldQuantity ?? null,
+          args.input.yieldUnit ?? null,
           args.input.totalTime ?? null,
           args.input.activeTime ?? null,
           args.input.restTime ?? null,
@@ -449,7 +454,7 @@ const resolvers = {
       await turso.execute({
         sql: `
           UPDATE recipes SET
-            name = ?, category = ?, cuisine_id = ?, servings = ?, yield_label = ?,
+            name = ?, category = ?, cuisine_id = ?, servings = ?, yield_quantity = ?, yield_unit = ?,
             total_time = ?, active_time = ?, rest_time = ?, original_recipe_link = ?,
             notes = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
@@ -459,7 +464,8 @@ const resolvers = {
           args.input.category ?? null,
           cuisineId,
           args.input.servings ?? null,
-          args.input.yieldLabel ?? null,
+          args.input.yieldQuantity ?? null,
+          args.input.yieldUnit ?? null,
           args.input.totalTime ?? null,
           args.input.activeTime ?? null,
           args.input.restTime ?? null,

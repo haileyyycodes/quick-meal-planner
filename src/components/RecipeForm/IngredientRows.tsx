@@ -24,6 +24,14 @@ export function IngredientRows({ value, onChange }: IngredientRowsProps) {
     onChange(value.filter((_, rowIndex) => rowIndex !== index));
   };
 
+  const moveRow = (index: number, direction: -1 | 1) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= value.length) return;
+    const reordered = [...value];
+    [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+    onChange(reordered);
+  };
+
   const addRow = () => {
     onChange([...value, emptyIngredientRow()]);
   };
@@ -36,7 +44,12 @@ export function IngredientRows({ value, onChange }: IngredientRowsProps) {
           <IngredientRowFields
             key={row.key}
             row={row}
+            index={index}
+            isFirst={index === 0}
+            isLast={index === value.length - 1}
             onUpdate={(patch) => updateRow(index, patch)}
+            onMoveUp={() => moveRow(index, -1)}
+            onMoveDown={() => moveRow(index, 1)}
             onRemove={() => removeRow(index)}
           />
         ))}
@@ -50,11 +63,21 @@ export function IngredientRows({ value, onChange }: IngredientRowsProps) {
 
 function IngredientRowFields({
   row,
+  index,
+  isFirst,
+  isLast,
   onUpdate,
+  onMoveUp,
+  onMoveDown,
   onRemove,
 }: {
   row: IngredientRowState;
+  index: number;
+  isFirst: boolean;
+  isLast: boolean;
   onUpdate: (patch: Partial<IngredientRowState>) => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
   onRemove: () => void;
 }) {
   const uid = useId();
@@ -106,9 +129,33 @@ function IngredientRowFields({
           placeholder="Prep note (e.g. diced)"
         />
       </div>
-      <Button type="button" variant="ghost" onClick={onRemove} aria-label={`Remove ${row.ingredient || 'ingredient'} row`}>
-        Remove
-      </Button>
+      <div className={styles.ingredientRowTrailing}>
+        <div className={styles.reorderButtons}>
+          <Button
+            type="button"
+            variant="ghost"
+            className={styles.reorderButton}
+            onClick={onMoveUp}
+            disabled={isFirst}
+            aria-label={`Move ingredient ${index + 1} up`}
+          >
+            ↑
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className={styles.reorderButton}
+            onClick={onMoveDown}
+            disabled={isLast}
+            aria-label={`Move ingredient ${index + 1} down`}
+          >
+            ↓
+          </Button>
+        </div>
+        <Button type="button" variant="ghost" onClick={onRemove} aria-label={`Remove ${row.ingredient || 'ingredient'} row`}>
+          Remove
+        </Button>
+      </div>
     </li>
   );
 }
