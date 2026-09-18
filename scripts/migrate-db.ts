@@ -46,6 +46,8 @@ const statements = [
     ingredient_id INTEGER NOT NULL,
     quantity REAL,
     unit TEXT NOT NULL,
+    size_quantity REAL,
+    size_unit TEXT,
     prep_note TEXT,
     ingredient_order INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
@@ -78,8 +80,12 @@ const statements = [
     ('pinch', 'pinch'),
     ('dash', 'dash'),
     ('can', 'can'),
+    ('jar', 'jar'),
+    ('bottle', 'bottle'),
     ('package', 'package'),
+    ('box', 'box'),
     ('whole', 'whole'),
+    ('stick', 'stick'),
     ('each', 'each'),
     ('to_taste', 'to taste'),
     ('as_needed', 'as needed');`,
@@ -92,6 +98,8 @@ const alterStatements = [
   `ALTER TABLE recipes ADD COLUMN yield_quantity REAL;`,
   `ALTER TABLE recipes ADD COLUMN yield_unit TEXT;`,
   `ALTER TABLE recipes DROP COLUMN yield_label;`,
+  `ALTER TABLE recipe_ingredients ADD COLUMN size_quantity REAL;`,
+  `ALTER TABLE recipe_ingredients ADD COLUMN size_unit TEXT;`,
 ];
 
 async function main() {
