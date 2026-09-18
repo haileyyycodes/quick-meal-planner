@@ -3,7 +3,7 @@
 import { useId } from 'react';
 import { ComboBoxInput } from '@/src/components/ComboBoxInput';
 import { INGREDIENTS_QUERY } from '@/src/lib/graphql/documents';
-import { UNITS } from '@/src/lib/constants';
+import { SIZE_UNITS, UNITS, unitHasSize } from '@/src/lib/constants';
 import { Button } from '@/src/components/ui/Button';
 import { Select } from '@/src/components/ui/Select';
 import inputStyles from '@/src/components/ui/inputs.module.css';
@@ -39,6 +39,17 @@ export function IngredientRows({ value, onChange }: IngredientRowsProps) {
   return (
     <div className={styles.rowGroup}>
       {value.length === 0 && <p className={styles.emptyHint}>No ingredients yet.</p>}
+      {value.length > 0 && (
+        <div className={styles.ingredientRowHeader} aria-hidden="true">
+          <div className={styles.ingredientRowHeaderGrid}>
+            <span>Qty</span>
+            <span>Unit</span>
+            <span>Ingredient</span>
+            <span>Prep note</span>
+          </div>
+          <div className={styles.ingredientRowTrailing} />
+        </div>
+      )}
       <ul className={styles.rowList}>
         {value.map((row, index) => (
           <IngredientRowFields
@@ -82,6 +93,13 @@ function IngredientRowFields({
 }) {
   const uid = useId();
 
+  const quantityNum = parseFloat(row.quantity);
+  const sizeNum = parseFloat(row.sizeQuantity);
+  const totalLabel =
+    unitHasSize(row.unit) && row.sizeUnit && !Number.isNaN(quantityNum) && !Number.isNaN(sizeNum) && quantityNum > 0 && sizeNum > 0
+      ? `${formatTotal(quantityNum * sizeNum)} ${row.sizeUnit} total`
+      : null;
+
   return (
     <li className={styles.ingredientRow}>
       <div className={styles.ingredientRowGrid}>
@@ -103,7 +121,12 @@ function IngredientRowFields({
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-unit`}>
           Unit
         </label>
-        <Select id={`${uid}-unit`} value={row.unit} onChange={(unit) => onUpdate({ unit })} options={UNITS} />
+        <Select
+          id={`${uid}-unit`}
+          value={row.unit}
+          onChange={(unit) => onUpdate(unitHasSize(unit) ? { unit } : { unit, sizeQuantity: '', sizeUnit: '' })}
+          options={UNITS}
+        />
 
         <label className={styles.srOnlyLabel} htmlFor={`${uid}-name`}>
           Ingredient name
@@ -129,6 +152,42 @@ function IngredientRowFields({
           placeholder="Prep note (e.g. diced)"
         />
       </div>
+
+      {unitHasSize(row.unit) && (
+        <div className={styles.sizeChip}>
+          <label className={styles.srOnlyLabel} htmlFor={`${uid}-size-qty`}>
+            Size per {row.unit}
+          </label>
+          <div className={styles.sizeChipQty}>
+            <input
+              id={`${uid}-size-qty`}
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              className={[inputStyles.input, inputStyles.sm].join(' ')}
+              value={row.sizeQuantity}
+              onChange={(event) => onUpdate({ sizeQuantity: event.target.value })}
+              placeholder="Size"
+            />
+          </div>
+          <label className={styles.srOnlyLabel} htmlFor={`${uid}-size-unit`}>
+            Size unit
+          </label>
+          <div className={styles.sizeChipUnit}>
+            <Select
+              id={`${uid}-size-unit`}
+              size="sm"
+              value={row.sizeUnit}
+              onChange={(sizeUnit) => onUpdate({ sizeUnit })}
+              options={[{ value: '', label: '— Size unit —' }, ...SIZE_UNITS]}
+            />
+          </div>
+          <span className={styles.sizeChipHint}>per {row.unit}</span>
+          {totalLabel && <span className={styles.sizeChipTotal}>= {totalLabel}</span>}
+        </div>
+      )}
+
       <div className={styles.ingredientRowTrailing}>
         <div className={styles.reorderButtons}>
           <Button
@@ -158,4 +217,8 @@ function IngredientRowFields({
       </div>
     </li>
   );
+}
+
+function formatTotal(value: number): string {
+  return Number(value.toFixed(4)).toString();
 }

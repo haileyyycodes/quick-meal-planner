@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from 'react';
 import Link from 'next/link';
-import { CATEGORIES, UNITS } from '@/src/lib/constants';
+import { CATEGORIES, UNITS, unitHasSize } from '@/src/lib/constants';
 import type { Recipe, RecipeInput } from '@/src/lib/graphql/types';
 import { CUISINES_QUERY } from '@/src/lib/graphql/documents';
 import { ComboBoxInput } from '@/src/components/ComboBoxInput';
@@ -34,6 +34,8 @@ const toInputRows = (recipe?: Recipe) => {
         ingredient: item.ingredient.name,
         quantity: item.quantity === null ? '' : String(item.quantity),
         unit: item.unit,
+        sizeQuantity: item.sizeQuantity === null ? '' : String(item.sizeQuantity),
+        sizeUnit: item.sizeUnit ?? '',
         prepNote: item.prepNote ?? '',
       }))
     : [emptyIngredientRow()];
@@ -114,6 +116,8 @@ export function RecipeForm({ initialRecipe, onSubmit, submitLabel, submitPending
           ingredient: row.ingredient.trim(),
           quantity: parseNumber(row.quantity),
           unit: row.unit,
+          sizeQuantity: unitHasSize(row.unit) ? parseNumber(row.sizeQuantity) : null,
+          sizeUnit: unitHasSize(row.unit) ? row.sizeUnit.trim() || null : null,
           prepNote: row.prepNote.trim() || null,
         })),
       instructions: steps
