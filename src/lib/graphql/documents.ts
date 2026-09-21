@@ -56,8 +56,6 @@ export const RECIPE_QUERY = gql`
         id
         quantity
         unit
-        sizeQuantity
-        sizeUnit
         prepNote
         ingredient {
           id

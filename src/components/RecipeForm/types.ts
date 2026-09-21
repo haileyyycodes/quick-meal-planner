@@ -3,8 +3,6 @@ export type IngredientRowState = {
   ingredient: string;
   quantity: string;
   unit: string;
-  sizeQuantity: string;
-  sizeUnit: string;
   prepNote: string;
 };
 
@@ -13,5 +11,5 @@ export function makeKey(): string {
 }
 
 export function emptyIngredientRow(): IngredientRowState {
-  return { key: makeKey(), ingredient: '', quantity: '', unit: 'each', sizeQuantity: '', sizeUnit: '', prepNote: '' };
+  return { key: makeKey(), ingredient: '', quantity: '', unit: 'each', prepNote: '' };
 }
