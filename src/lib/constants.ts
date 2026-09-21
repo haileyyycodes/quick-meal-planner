@@ -17,28 +17,17 @@ export const UNITS = [
   { value: 'clove', label: 'clove', plural: 'cloves' },
   { value: 'pinch', label: 'pinch', plural: 'pinches' },
   { value: 'dash', label: 'dash', plural: 'dashes' },
-  { value: 'can', label: 'can', plural: 'cans', hasSize: true },
-  { value: 'jar', label: 'jar', plural: 'jars', hasSize: true },
-  { value: 'bottle', label: 'bottle', plural: 'bottles', hasSize: true },
-  { value: 'package', label: 'package', plural: 'packages', hasSize: true },
-  { value: 'box', label: 'box', plural: 'boxes', hasSize: true },
+  { value: 'can', label: 'can', plural: 'cans' },
+  { value: 'jar', label: 'jar', plural: 'jars' },
+  { value: 'bottle', label: 'bottle', plural: 'bottles' },
+  { value: 'package', label: 'package', plural: 'packages' },
+  { value: 'box', label: 'box', plural: 'boxes' },
   { value: 'whole', label: 'whole', plural: 'whole' },
-  { value: 'stick', label: 'stick', plural: 'sticks', hasSize: true },
+  { value: 'stick', label: 'stick', plural: 'sticks' },
   { value: 'each', label: 'each', plural: 'each' },
   { value: 'to taste', label: 'to taste', plural: 'to taste' },
   { value: 'as needed', label: 'as needed', plural: 'as needed' },
 ] as const;
-
-// Units that describe a container/package rather than a raw measure (e.g. "can", "jar") can
-// carry a size, like "15 oz" or "400 g", so the actual amount purchased is unambiguous.
-export function unitHasSize(unit: string): boolean {
-  return UNITS.some((option) => option.value === unit && 'hasSize' in option && option.hasSize);
-}
-
-// Only weight/volume measures make sense as a container size (a "can" can't be sized in "cloves").
-export const SIZE_UNITS = UNITS.filter((option) =>
-  ['fl oz', 'oz', 'lb', 'g', 'kg', 'mg', 'ml', 'l', 'cup', 'tbsp', 'tsp'].includes(option.value)
-);
 
 export function pluralizeUnit(unit: string, quantity: number | null | undefined): string {
   if (quantity == null || quantity <= 1) return unit;
