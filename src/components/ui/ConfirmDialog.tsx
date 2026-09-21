@@ -10,6 +10,9 @@ type ConfirmDialogProps = {
   description?: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  /** Optional third, destructive option (e.g. "Leave without saving"), rendered between Cancel and Confirm. */
+  tertiaryLabel?: string;
+  onTertiary?: () => void;
   pending?: boolean;
   danger?: boolean;
   onConfirm: () => void;
@@ -22,6 +25,8 @@ export function ConfirmDialog({
   description,
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
+  tertiaryLabel,
+  onTertiary,
   pending = false,
   danger = false,
   onConfirm,
@@ -68,6 +73,11 @@ export function ConfirmDialog({
         <Button variant="secondary" onClick={onCancel} disabled={pending} type="button">
           {cancelLabel}
         </Button>
+        {tertiaryLabel && onTertiary && (
+          <Button variant="danger" onClick={onTertiary} disabled={pending} type="button">
+            {tertiaryLabel}
+          </Button>
+        )}
         <Button
           variant={danger ? 'danger' : 'primary'}
           onClick={onConfirm}

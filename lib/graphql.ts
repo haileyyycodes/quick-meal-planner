@@ -22,6 +22,7 @@ const typeDefs = `
   input RecipeFilterInput {
     name: String
     ingredient: String
+    search: String
     cuisine: String
     tags: [String!]
     category: Category
@@ -45,6 +46,7 @@ const typeDefs = `
 
   input RecipeInput {
     name: String!
+    description: String
     category: Category
     cuisine: String
     servings: Int
@@ -54,9 +56,9 @@ const typeDefs = `
     activeTime: Int
     restTime: Int
     originalRecipeLink: String
+    instructions: String
     notes: String
     ingredients: [RecipeIngredientInput!]
-    instructions: [StepInput!]
     tags: [String!]
   }
 
@@ -69,14 +71,10 @@ const typeDefs = `
     prepNote: String
   }
 
-  input StepInput {
-    order: Int!
-    text: String!
-  }
-
   type Recipe {
     id: Int!
     name: String!
+    description: String
     category: String
     cuisine: Cuisine
     servings: Int
@@ -86,11 +84,11 @@ const typeDefs = `
     activeTime: Int
     restTime: Int
     originalRecipeLink: String
+    instructions: String
     notes: String
     draft: Boolean!
     tags: [Tag!]!
     ingredients: [RecipeIngredient!]!
-    steps: [Step!]!
   }
 
   type Cuisine {
@@ -117,17 +115,12 @@ const typeDefs = `
     id: Int!
     name: String!
   }
-
-  type Step {
-    id: Int!
-    order: Int!
-    text: String!
-  }
 `;
 
 type RecipeFilterInput = {
   name?: string | null;
   ingredient?: string | null;
+  search?: string | null;
   cuisine?: string | null;
   tags?: string[] | null;
   category?: string | null;
@@ -143,13 +136,9 @@ type RecipeIngredientInputShape = {
   prepNote?: string | null;
 };
 
-type StepInputShape = {
-  order: number;
-  text: string;
-};
-
 type RecipeInputShape = {
   name: string;
+  description?: string | null;
   category?: string | null;
   cuisine?: string | null;
   servings?: number | null;
@@ -159,9 +148,9 @@ type RecipeInputShape = {
   activeTime?: number | null;
   restTime?: number | null;
   originalRecipeLink?: string | null;
+  instructions?: string | null;
   notes?: string | null;
   ingredients?: RecipeIngredientInputShape[] | null;
-  instructions?: StepInputShape[] | null;
   tags?: string[] | null;
 };
 
@@ -178,6 +167,7 @@ const toString = (value: unknown): string | null => {
 const getRecipeBaseFields = (row: Record<string, unknown>) => ({
   id: Number(row.id),
   name: String(row.name),
+  description: toString(row.description),
   category: toString(row.category),
   servings: toNumber(row.servings),
   yieldQuantity: toNumber(row.yield_quantity),
@@ -186,6 +176,7 @@ const getRecipeBaseFields = (row: Record<string, unknown>) => ({
   activeTime: toNumber(row.activeTime),
   restTime: toNumber(row.restTime),
   originalRecipeLink: toString(row.original_recipe_link),
+  instructions: toString(row.instructions),
   notes: toString(row.notes),
 });
 
@@ -226,6 +217,19 @@ const buildRecipeFilterClause = (filter?: RecipeFilterInput | null) => {
       WHERE LOWER(i.name) LIKE ?
     )`);
     params.push(`%${filter.ingredient.trim().toLowerCase()}%`);
+  }
+
+  if (filter?.search?.trim()) {
+    const term = `%${filter.search.trim().toLowerCase()}%`;
+    clauses.push(`(
+      LOWER(r.name) LIKE ?
+      OR r.id IN (
+        SELECT ri.recipe_id FROM recipe_ingredients ri
+        JOIN ingredients i ON i.id = ri.ingredient_id
+        WHERE LOWER(i.name) LIKE ?
+      )
+    )`);
+    params.push(term, term);
   }
 
   if (filter?.cuisine?.trim()) {
@@ -303,27 +307,17 @@ const insertRecipeChildren = async (recipeId: number, input: RecipeInputShape) =
     }
   }
 
-  if (input.instructions && input.instructions.length > 0) {
-    for (const step of input.instructions) {
-      if (!step?.text?.trim()) continue;
-      await turso.execute({
-        sql: 'INSERT INTO steps (recipe_id, step_order, text) VALUES (?, ?, ?)',
-        args: [recipeId, step.order ?? 0, step.text.trim()],
-      });
-    }
-  }
 };
 
 const clearRecipeChildren = async (recipeId: number) => {
   await turso.execute({ sql: 'DELETE FROM recipe_tags WHERE recipe_id = ?', args: [recipeId] });
   await turso.execute({ sql: 'DELETE FROM recipe_ingredients WHERE recipe_id = ?', args: [recipeId] });
-  await turso.execute({ sql: 'DELETE FROM steps WHERE recipe_id = ?', args: [recipeId] });
 };
 
 const RECIPE_BASE_SELECT = `
-  SELECT r.id, r.name, r.category, r.servings, r.yield_quantity, r.yield_unit, r.total_time AS totalTime,
+  SELECT r.id, r.name, r.description, r.category, r.servings, r.yield_quantity, r.yield_unit, r.total_time AS totalTime,
          r.active_time AS activeTime, r.rest_time AS restTime, r.original_recipe_link,
-         r.notes, c.id AS cuisine_id, c.name AS cuisine_name
+         r.instructions, r.notes, c.id AS cuisine_id, c.name AS cuisine_name
   FROM recipes r
   LEFT JOIN cuisines c ON c.id = r.cuisine_id
 `;
@@ -414,12 +408,13 @@ const resolvers = {
       const recipeInsert = await turso.execute({
         sql: `
           INSERT INTO recipes (
-            name, category, cuisine_id, servings, yield_quantity, yield_unit, total_time,
-            active_time, rest_time, original_recipe_link, notes
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            name, description, category, cuisine_id, servings, yield_quantity, yield_unit, total_time,
+            active_time, rest_time, original_recipe_link, instructions, notes
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
+          args.input.description ?? null,
           args.input.category ?? null,
           cuisineId,
           args.input.servings ?? null,
@@ -429,6 +424,7 @@ const resolvers = {
           args.input.activeTime ?? null,
           args.input.restTime ?? null,
           args.input.originalRecipeLink ?? null,
+          args.input.instructions ?? null,
           args.input.notes ?? null,
         ],
       });
@@ -462,13 +458,14 @@ const resolvers = {
       await turso.execute({
         sql: `
           UPDATE recipes SET
-            name = ?, category = ?, cuisine_id = ?, servings = ?, yield_quantity = ?, yield_unit = ?,
+            name = ?, description = ?, category = ?, cuisine_id = ?, servings = ?, yield_quantity = ?, yield_unit = ?,
             total_time = ?, active_time = ?, rest_time = ?, original_recipe_link = ?,
-            notes = ?, updated_at = CURRENT_TIMESTAMP
+            instructions = ?, notes = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
         `,
         args: [
           name,
+          args.input.description ?? null,
           args.input.category ?? null,
           cuisineId,
           args.input.servings ?? null,
@@ -478,6 +475,7 @@ const resolvers = {
           args.input.activeTime ?? null,
           args.input.restTime ?? null,
           args.input.originalRecipeLink ?? null,
+          args.input.instructions ?? null,
           args.input.notes ?? null,
           args.id,
         ],
@@ -549,32 +547,31 @@ const resolvers = {
         ingredient: { id: Number(row.ingredient_id), name: String(row.ingredient_name) },
       }));
     },
-    steps: async (parent: { id: number }) => {
-      const result = await turso.execute({
-        sql: 'SELECT id, step_order AS "order", text FROM steps WHERE recipe_id = ? ORDER BY step_order ASC',
-        args: [parent.id],
-      });
-
-      return result.rows.map((row) => ({
-        id: Number(row.id),
-        order: Number(row.order),
-        text: String(row.text),
-      }));
-    },
-    draft: async (parent: { id: number; category?: string | null; totalTime?: number | null; name?: string }) => {
-      if (!parent.category || parent.totalTime === null || parent.totalTime === undefined || !parent.name) {
+    draft: async (parent: {
+      id: number;
+      category?: string | null;
+      totalTime?: number | null;
+      name?: string;
+      instructions?: string | null;
+    }) => {
+      if (
+        !parent.category ||
+        parent.totalTime === null ||
+        parent.totalTime === undefined ||
+        !parent.name ||
+        !parent.instructions
+      ) {
         return true;
       }
 
-      const [ingredientCount, stepCount] = await Promise.all([
-        turso.execute({ sql: 'SELECT COUNT(*) AS count FROM recipe_ingredients WHERE recipe_id = ?', args: [parent.id] }),
-        turso.execute({ sql: 'SELECT COUNT(*) AS count FROM steps WHERE recipe_id = ?', args: [parent.id] }),
-      ]);
+      const ingredientCount = await turso.execute({
+        sql: 'SELECT COUNT(*) AS count FROM recipe_ingredients WHERE recipe_id = ?',
+        args: [parent.id],
+      });
 
       const ingredientTotal = Number(ingredientCount.rows[0]?.count ?? 0);
-      const stepTotal = Number(stepCount.rows[0]?.count ?? 0);
 
-      return ingredientTotal === 0 || stepTotal === 0;
+      return ingredientTotal === 0;
     },
   },
   RecipeIngredient: {

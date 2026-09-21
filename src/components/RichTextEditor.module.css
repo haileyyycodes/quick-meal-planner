@@ -32,12 +32,18 @@
 
 .toolButton[aria-pressed='true'] {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-on-accent);
 }
 
 .toolButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.toolbarDivider {
+  width: 1px;
+  margin: var(--space-1) var(--space-1);
+  background: var(--color-border-strong);
 }
 
 .srOnly {
@@ -53,8 +59,8 @@
 }
 
 .editorContent {
-  min-height: 6rem;
-  padding: var(--space-3);
+  min-height: var(--content-min-height, 2.5rem);
+  padding: var(--space-2) var(--space-3);
   outline: none;
 }
 
@@ -72,4 +78,24 @@
   color: var(--color-text-muted);
   pointer-events: none;
   height: 0;
+}
+
+.editorContent ul,
+.editorContent ol {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-6);
+}
+
+.editorContent ul:last-child,
+.editorContent ol:last-child {
+  margin-bottom: 0;
+}
+
+.editorContent li p {
+  margin: 0;
+}
+
+.editorContent a {
+  color: var(--color-primary);
+  text-decoration: underline;
 }

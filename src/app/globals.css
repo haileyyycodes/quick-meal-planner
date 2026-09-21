@@ -1,37 +1,52 @@
 :root {
-  /* base neutrals — warm cream, not cool gray */
-  --cream-0: #fdfbf7;
-  --cream-1: #faf6ee;
-  --cream-2: #f3eee1;
-  --cream-3: #e8e1ce;
-  --cream-4: #d8cfb6;
-  --ink-0: #1f1b14;
-  --ink-1: #4a4436;
-  --ink-2: #7c7460;
-  --ink-3: #9c9480;
+  /* brand palette */
+  --palette-dark-green: #0f6556;
+  --palette-deep-blue: #1276c6;
+  --palette-leaf-green: #b0b960;
+  --palette-berry-pink: #ed435e;
+  --palette-butter-yellow: #fffef0;
+  --palette-gray: #999999;
+  --palette-paper-white: #ffffff;
+  --palette-black-ink: #000000;
+  --palette-light-green: #faffca;
+  --palette-light-orange: #ffc47d;
+  --palette-baby-blue: #87beeb;
+  --palette-bright-yellow: #f5f361;
+  --palette-teal: #75d3c2;
 
-  /* orange — primary action, warm rust */
-  --orange-50: #fbefe6;
-  --orange-300: #d98a55;
-  --orange-500: #a85c32;
-  --orange-600: #8f4b27;
-  --orange-700: #75391d;
+  /* neutrals — derived from Light Butter Yellow toward 25% Gray */
+  --cream-0: var(--palette-butter-yellow);
+  --cream-1: color-mix(in srgb, var(--palette-butter-yellow) 92%, var(--palette-gray));
+  --cream-2: color-mix(in srgb, var(--palette-butter-yellow) 85%, var(--palette-gray));
+  --cream-3: color-mix(in srgb, var(--palette-butter-yellow) 75%, var(--palette-gray));
+  --cream-4: color-mix(in srgb, var(--palette-butter-yellow) 60%, var(--palette-gray));
+  --ink-0: var(--palette-black-ink);
+  --ink-1: color-mix(in srgb, var(--palette-black-ink) 80%, var(--palette-gray));
+  --ink-2: var(--palette-gray);
+  --ink-3: color-mix(in srgb, var(--palette-gray) 55%, var(--palette-paper-white));
 
-  /* green — secondary accent, calm sage */
-  --green-50: #eef2e7;
-  --green-300: #9ab07e;
-  --green-500: #5f7a4a;
-  --green-600: #4c6339;
-  --green-700: #3a4c2b;
+  /* orange — draft accent, from Light Orange */
+  --orange-50: color-mix(in srgb, var(--palette-light-orange) 18%, var(--palette-paper-white));
+  --orange-300: var(--palette-light-orange);
+  --orange-500: color-mix(in srgb, var(--palette-light-orange) 65%, var(--palette-black-ink));
+  --orange-600: color-mix(in srgb, var(--palette-light-orange) 50%, var(--palette-black-ink));
+  --orange-700: color-mix(in srgb, var(--palette-light-orange) 40%, var(--palette-black-ink));
 
-  /* red — destructive only */
-  --red-50: #fbeaea;
-  --red-500: #b33a3a;
-  --red-600: #9a2f2f;
+  /* green — tag accent, from Leaf Green */
+  --green-50: color-mix(in srgb, var(--palette-leaf-green) 18%, var(--palette-paper-white));
+  --green-300: var(--palette-leaf-green);
+  --green-500: color-mix(in srgb, var(--palette-leaf-green) 65%, var(--palette-black-ink));
+  --green-600: color-mix(in srgb, var(--palette-leaf-green) 50%, var(--palette-black-ink));
+  --green-700: color-mix(in srgb, var(--palette-leaf-green) 38%, var(--palette-black-ink));
+
+  /* red — destructive only, from Berry Pink */
+  --red-50: color-mix(in srgb, var(--palette-berry-pink) 14%, var(--palette-paper-white));
+  --red-500: var(--palette-berry-pink);
+  --red-600: color-mix(in srgb, var(--palette-berry-pink) 82%, var(--palette-black-ink));
 
   /* semantic aliases — app code should use these, not the raw ramps above */
   --color-bg: var(--cream-0);
-  --color-surface: #ffffff;
+  --color-surface: var(--palette-paper-white);
   --color-surface-muted: var(--cream-1);
   --color-surface-muted-alt: var(--cream-2);
   --color-border: var(--cream-3);
@@ -40,31 +55,39 @@
   --color-text-secondary: var(--ink-1);
   --color-text-muted: var(--ink-2);
   --color-text-placeholder: var(--ink-3);
-  --color-text-on-accent: #ffffff;
+  --color-text-on-accent: var(--palette-paper-white);
 
-  --color-primary: var(--orange-500);
-  --color-primary-hover: var(--orange-600);
-  --color-primary-pressed: var(--orange-700);
-  --color-primary-tint: var(--orange-50);
+  --color-primary: var(--palette-dark-green);
+  --color-primary-hover: color-mix(in srgb, var(--palette-dark-green) 85%, var(--palette-black-ink));
+  --color-primary-pressed: color-mix(in srgb, var(--palette-dark-green) 70%, var(--palette-black-ink));
+  --color-primary-tint: color-mix(in srgb, var(--palette-dark-green) 12%, var(--palette-paper-white));
 
-  --color-secondary-accent: var(--green-500);
-  --color-secondary-accent-hover: var(--green-600);
-  --color-secondary-accent-tint: var(--green-50);
+  --color-secondary-accent: var(--palette-deep-blue);
+  --color-secondary-accent-hover: color-mix(in srgb, var(--palette-deep-blue) 85%, var(--palette-black-ink));
+  --color-secondary-accent-tint: color-mix(in srgb, var(--palette-deep-blue) 12%, var(--palette-paper-white));
 
   --color-danger: var(--red-500);
   --color-danger-hover: var(--red-600);
   --color-danger-surface: var(--red-50);
 
+  --color-card-accent: var(--palette-berry-pink);
+
+  --color-rail: var(--palette-dark-green);
+  --color-rail-hover: color-mix(in srgb, var(--palette-dark-green) 85%, var(--palette-paper-white));
+  --color-rail-active: color-mix(in srgb, var(--palette-dark-green) 80%, var(--palette-paper-white));
+  --color-panel-secondary: var(--palette-leaf-green);
+  --color-panel-secondary-hover: color-mix(in srgb, var(--palette-leaf-green) 85%, var(--palette-black-ink));
+  --color-panel-secondary-active: var(--palette-butter-yellow);
+
   --color-draft: var(--orange-700);
   --color-draft-surface: var(--orange-50);
 
-  --color-focus-ring: var(--orange-300);
+  --color-focus-ring: var(--palette-baby-blue);
 
-  /* typography — warm serif headlines over a humanist sans body */
-  --font-serif: var(--font-lora), Georgia, 'Times New Roman', serif;
-  --font-sans: var(--font-karla), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, Helvetica,
-    Arial, sans-serif;
-  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  /* typography — JetBrains Mono throughout, headlines and body alike */
+  --font-serif: var(--font-jetbrains-mono), 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-sans: var(--font-jetbrains-mono), 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --font-mono: var(--font-jetbrains-mono), 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
   --text-xs: 13px;
   --text-sm: 14px;
@@ -98,9 +121,9 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  --shadow-sm: 0 1px 2px rgba(90, 58, 30, 0.06);
-  --shadow-card: 0 2px 8px rgba(90, 58, 30, 0.08);
-  --shadow-md: 0 12px 32px rgba(31, 27, 20, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.18);
 
   --duration-fast: 120ms;
   --duration-base: 180ms;
@@ -181,5 +204,28 @@ button, input, select, textarea {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@page {
+  size: portrait;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: none;
   }
 }

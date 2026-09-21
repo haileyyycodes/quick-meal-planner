@@ -7,12 +7,9 @@ import { TagsInput } from './TagsInput';
 import { Button } from './ui/Button';
 import { FormField } from './ui/FormField';
 import { Select } from './ui/Select';
-import inputStyles from './ui/inputs.module.css';
 import styles from './RecipeFilters.module.css';
 
 export type FiltersState = {
-  name: string;
-  ingredient: string;
   cuisine: string;
   tags: string[];
   category: string;
@@ -20,8 +17,6 @@ export type FiltersState = {
 };
 
 export const EMPTY_FILTERS: FiltersState = {
-  name: '',
-  ingredient: '',
   cuisine: '',
   tags: [],
   category: '',
@@ -30,12 +25,7 @@ export const EMPTY_FILTERS: FiltersState = {
 
 export function hasActiveFilters(filters: FiltersState): boolean {
   return (
-    filters.name.trim() !== '' ||
-    filters.ingredient.trim() !== '' ||
-    filters.cuisine.trim() !== '' ||
-    filters.tags.length > 0 ||
-    filters.category !== '' ||
-    filters.timeBucket !== ''
+    filters.cuisine.trim() !== '' || filters.tags.length > 0 || filters.category !== '' || filters.timeBucket !== ''
   );
 }
 
@@ -50,28 +40,6 @@ export function RecipeFilters({ value, onChange }: RecipeFiltersProps) {
   return (
     <div className={styles.filters}>
       <div className={styles.row}>
-        <FormField label="Search by name" htmlFor="filter-name">
-          <input
-            id="filter-name"
-            type="search"
-            className={inputStyles.input}
-            value={value.name}
-            onChange={(event) => update({ name: event.target.value })}
-            placeholder="e.g. Chili"
-          />
-        </FormField>
-
-        <FormField label="Ingredient" htmlFor="filter-ingredient">
-          <input
-            id="filter-ingredient"
-            type="search"
-            className={inputStyles.input}
-            value={value.ingredient}
-            onChange={(event) => update({ ingredient: event.target.value })}
-            placeholder="e.g. Chicken"
-          />
-        </FormField>
-
         <FormField label="Cuisine" htmlFor="filter-cuisine">
           <ComboBoxInput
             id="filter-cuisine"

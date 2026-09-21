@@ -1,103 +1,11 @@
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-  flex-wrap: wrap;
-}
-
-.titleRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.titleRow h1 {
-  margin: 0;
-}
-
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-4);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  margin-top: var(--space-1);
-}
-
-.tagList {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-3) 0 0;
-  padding: 0;
-}
-
-.headerActions {
-  display: flex;
-  gap: var(--space-2);
-  flex-shrink: 0;
-}
-
-.editLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: var(--space-2) var(--space-5);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-strong);
-  color: var(--color-text);
-  font-weight: var(--weight-bold);
-  font-size: var(--text-sm);
-  text-decoration: none;
-}
-
-.editLink:hover {
-  background: var(--color-surface-muted);
+.toolbar {
+  margin-bottom: var(--space-4);
 }
 
 .backLink {
   color: var(--color-primary);
 }
 
-.deleteError {
-  color: var(--color-danger);
-  margin-top: calc(-1 * var(--space-4));
-  margin-bottom: var(--space-4);
-}
-
-.section {
-  margin-bottom: var(--space-6);
-}
-
-.section h2 {
-  margin-bottom: var(--space-3);
-}
-
-.emptyHint {
-  color: var(--color-text-muted);
-}
-
-.ingredientList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-left: var(--space-5);
-}
-
-.prepNote {
-  color: var(--color-text-muted);
-}
-
-.stepList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding-left: var(--space-5);
-}
-
-.stepList li p {
-  margin: 0;
+.originalLink {
+  margin: 0 0 var(--space-4);
 }

@@ -15,15 +15,10 @@ export type RecipeIngredient = {
   prepNote: string | null;
 };
 
-export type Step = {
-  id: number;
-  order: number;
-  text: string;
-};
-
 export type Recipe = {
   id: number;
   name: string;
+  description: string | null;
   category: Category | null;
   cuisine: NamedEntity | null;
   servings: number | null;
@@ -33,16 +28,17 @@ export type Recipe = {
   activeTime: number | null;
   restTime: number | null;
   originalRecipeLink: string | null;
+  instructions: string | null;
   notes: string | null;
   draft: boolean;
   tags: NamedEntity[];
   ingredients: RecipeIngredient[];
-  steps: Step[];
 };
 
 export type RecipeFilterInput = {
   name?: string;
   ingredient?: string;
+  search?: string;
   cuisine?: string;
   tags?: string[];
   category?: Category;
@@ -58,13 +54,9 @@ export type RecipeIngredientInput = {
   prepNote: string | null;
 };
 
-export type StepInput = {
-  order: number;
-  text: string;
-};
-
 export type RecipeInput = {
   name: string;
+  description: string | null;
   category: Category | null;
   cuisine: string | null;
   servings: number | null;
@@ -74,8 +66,8 @@ export type RecipeInput = {
   activeTime: number | null;
   restTime: number | null;
   originalRecipeLink: string | null;
+  instructions: string | null;
   notes: string | null;
   ingredients: RecipeIngredientInput[];
-  instructions: StepInput[];
   tags: string[];
 };
