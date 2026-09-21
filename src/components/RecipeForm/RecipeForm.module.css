@@ -64,40 +64,6 @@
   min-width: 132px;
 }
 
-.sizeChip {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-3);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-}
-
-.sizeChipQty {
-  width: 64px;
-  flex-shrink: 0;
-}
-
-.sizeChipUnit {
-  width: 92px;
-  flex-shrink: 0;
-}
-
-.sizeChipHint,
-.sizeChipTotal {
-  font-size: var(--text-xs);
-  white-space: nowrap;
-}
-
-.sizeChipHint {
-  color: var(--color-text-muted);
-}
-
-.sizeChipTotal {
-  color: var(--color-text-placeholder);
-}
-
 .reorderButtons {
   display: flex;
   gap: 2px;
@@ -141,10 +107,6 @@
 
   .ingredientRowGrid {
     grid-template-columns: 1fr;
-  }
-
-  .sizeChip {
-    flex-wrap: wrap;
   }
 
   .ingredientRowTrailing {

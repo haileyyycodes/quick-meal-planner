@@ -125,8 +125,6 @@ function toDuplicateInput(recipe: Recipe): RecipeInput {
       ingredient: item.ingredient.name,
       quantity: item.quantity,
       unit: item.unit,
-      sizeQuantity: item.sizeQuantity,
-      sizeUnit: item.sizeUnit,
       prepNote: item.prepNote,
     })),
     tags: recipe.tags.map((tag) => tag.name),

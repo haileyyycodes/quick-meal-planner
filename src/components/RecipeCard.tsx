@@ -54,11 +54,6 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           {recipe.ingredients.map((item) => (
             <li key={item.id}>
               {item.quantity != null && <span>{item.quantity} </span>}
-              {item.sizeQuantity != null && (
-                <span>
-                  {item.sizeQuantity} {item.sizeUnit ?? ''}{' '}
-                </span>
-              )}
               {item.unit !== 'each' && <span>{pluralizeUnit(item.unit, item.quantity)} </span>}
               <span>{item.ingredient.name}</span>
               {item.prepNote && <span className={styles.prepNote}>, {item.prepNote}</span>}
