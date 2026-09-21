@@ -66,6 +66,8 @@ const typeDefs = `
     ingredient: String!
     quantity: Float
     unit: String!
+    sizeQuantity: Float
+    sizeUnit: String
     prepNote: String
   }
 
@@ -104,6 +106,8 @@ const typeDefs = `
     ingredient: Ingredient!
     quantity: Float
     unit: String!
+    sizeQuantity: Float
+    sizeUnit: String
     prepNote: String
   }
 
@@ -127,6 +131,8 @@ type RecipeIngredientInputShape = {
   ingredient: string;
   quantity?: number | null;
   unit: string;
+  sizeQuantity?: number | null;
+  sizeUnit?: string | null;
   prepNote?: string | null;
 };
 
@@ -284,14 +290,16 @@ const insertRecipeChildren = async (recipeId: number, input: RecipeInputShape) =
       const ingredientId = await createOrFindEntity('ingredients', ingredientName);
       await turso.execute({
         sql: `
-          INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, prep_note, ingredient_order)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, size_quantity, size_unit, prep_note, ingredient_order)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           recipeId,
           ingredientId,
           ingredientInput.quantity ?? null,
           ingredientInput.unit ?? 'each',
+          ingredientInput.sizeQuantity ?? null,
+          ingredientInput.sizeUnit ?? null,
           ingredientInput.prepNote ?? null,
           index,
         ],
@@ -519,7 +527,7 @@ const resolvers = {
     ingredients: async (parent: { id: number }) => {
       const result = await turso.execute({
         sql: `
-          SELECT ri.id, ri.quantity, ri.unit, ri.prep_note,
+          SELECT ri.id, ri.quantity, ri.unit, ri.size_quantity, ri.size_unit, ri.prep_note,
                  i.id AS ingredient_id, i.name AS ingredient_name
           FROM recipe_ingredients ri
           JOIN ingredients i ON i.id = ri.ingredient_id
@@ -533,6 +541,8 @@ const resolvers = {
         id: Number(row.id),
         quantity: toNumber(row.quantity),
         unit: String(row.unit),
+        sizeQuantity: toNumber(row.size_quantity),
+        sizeUnit: toString(row.size_unit),
         prepNote: toString(row.prep_note),
         ingredient: { id: Number(row.ingredient_id), name: String(row.ingredient_name) },
       }));

@@ -10,6 +10,8 @@ export type RecipeIngredient = {
   ingredient: NamedEntity;
   quantity: number | null;
   unit: string;
+  sizeQuantity: number | null;
+  sizeUnit: string | null;
   prepNote: string | null;
 };
 
@@ -47,6 +49,8 @@ export type RecipeIngredientInput = {
   ingredient: string;
   quantity: number | null;
   unit: string;
+  sizeQuantity: number | null;
+  sizeUnit: string | null;
   prepNote: string | null;
 };
 

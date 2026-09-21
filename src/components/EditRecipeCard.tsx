@@ -27,6 +27,8 @@ const toInputRows = (recipe?: Recipe) => {
         ingredient: item.ingredient.name,
         quantity: item.quantity === null ? '' : String(item.quantity),
         unit: item.unit,
+        sizeQuantity: item.sizeQuantity === null ? '' : String(item.sizeQuantity),
+        sizeUnit: item.sizeUnit ?? '',
         prepNote: item.prepNote ?? '',
       }))
     : [emptyIngredientRow()];
@@ -64,6 +66,8 @@ export function EditRecipeCard({ initialRecipe, onSubmit }: EditRecipeCardProps)
           ingredient: row.ingredient.trim(),
           quantity: row.quantity.trim() === '' ? null : Number(row.quantity),
           unit: row.unit,
+          sizeQuantity: row.sizeQuantity.trim() === '' ? null : Number(row.sizeQuantity),
+          sizeUnit: row.sizeUnit.trim() || null,
           prepNote: row.prepNote.trim() || null,
         })),
     };
