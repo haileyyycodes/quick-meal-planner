@@ -152,7 +152,13 @@ function IngredientRowFields({
             ↓
           </Button>
         </div>
-        <Button type="button" variant="ghost" onClick={onRemove} aria-label={`Remove ${row.ingredient || 'ingredient'} row`}>
+        <Button
+          type="button"
+          variant="ghost"
+          className={styles.removeButton}
+          onClick={onRemove}
+          aria-label={`Remove ${row.ingredient || 'ingredient'} row`}
+        >
           Remove
         </Button>
       </div>

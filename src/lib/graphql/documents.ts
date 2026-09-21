@@ -32,6 +32,7 @@ export const RECIPE_QUERY = gql`
     recipe(id: $id) {
       id
       name
+      description
       category
       servings
       yieldQuantity
@@ -40,6 +41,7 @@ export const RECIPE_QUERY = gql`
       activeTime
       restTime
       originalRecipeLink
+      instructions
       notes
       draft
       cuisine {
@@ -59,11 +61,6 @@ export const RECIPE_QUERY = gql`
           id
           name
         }
-      }
-      steps {
-        id
-        order
-        text
       }
     }
   }

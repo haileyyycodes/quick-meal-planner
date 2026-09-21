@@ -19,6 +19,7 @@ const statements = [
   `CREATE TABLE IF NOT EXISTS recipes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
+    description TEXT,
     cuisine_id INTEGER,
     category TEXT,
     servings INTEGER,
@@ -28,17 +29,11 @@ const statements = [
     active_time INTEGER,
     rest_time INTEGER,
     original_recipe_link TEXT,
+    instructions TEXT,
     notes TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (cuisine_id) REFERENCES cuisines(id)
-  );`,
-  `CREATE TABLE IF NOT EXISTS steps (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    recipe_id INTEGER NOT NULL,
-    step_order INTEGER NOT NULL,
-    text TEXT NOT NULL,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
   );`,
   `CREATE TABLE IF NOT EXISTS recipe_ingredients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,7 +87,54 @@ const alterStatements = [
   `ALTER TABLE recipes ADD COLUMN yield_quantity REAL;`,
   `ALTER TABLE recipes ADD COLUMN yield_unit TEXT;`,
   `ALTER TABLE recipes DROP COLUMN yield_label;`,
+  `ALTER TABLE recipes ADD COLUMN description TEXT;`,
+  `ALTER TABLE recipes ADD COLUMN instructions TEXT;`,
 ];
+
+// One-time backfill: instructions used to live as ordered rows in a `steps` table. Each step's
+// text was already a Tiptap-produced `<p>...</p>` fragment, so concatenating them in order
+// reproduces the same multi-paragraph rich text the new single `instructions` field expects.
+async function backfillInstructionsFromSteps() {
+  let stepsTableExists = true;
+  try {
+    await turso.execute('SELECT 1 FROM steps LIMIT 1;');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (/no such table/i.test(message)) {
+      stepsTableExists = false;
+    } else {
+      throw error;
+    }
+  }
+
+  if (!stepsTableExists) {
+    console.log('Skipped steps backfill: steps table no longer exists.');
+    return;
+  }
+
+  const recipes = await turso.execute(
+    `SELECT id FROM recipes WHERE instructions IS NULL OR instructions = '';`
+  );
+
+  for (const row of recipes.rows) {
+    const recipeId = Number(row.id);
+    const steps = await turso.execute({
+      sql: 'SELECT text FROM steps WHERE recipe_id = ? ORDER BY step_order ASC',
+      args: [recipeId],
+    });
+    if (steps.rows.length === 0) continue;
+
+    const instructions = steps.rows.map((stepRow) => String(stepRow.text)).join('');
+    await turso.execute({
+      sql: 'UPDATE recipes SET instructions = ? WHERE id = ?',
+      args: [instructions, recipeId],
+    });
+  }
+
+  console.log(`Backfilled instructions for ${recipes.rows.length} recipe(s) from steps.`);
+  await turso.execute('DROP TABLE IF EXISTS steps;');
+  console.log('Dropped steps table.');
+}
 
 async function main() {
   for (let index = 0; index < statements.length; index += 1) {
@@ -114,6 +156,8 @@ async function main() {
       }
     }
   }
+
+  await backfillInstructionsFromSteps();
 
   console.log('Database schema ready.');
 }

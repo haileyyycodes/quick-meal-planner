@@ -2,7 +2,7 @@
   border: none;
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  max-width: 28rem;
+  max-width: 32rem;
   width: calc(100vw - var(--space-6));
   box-shadow: var(--shadow-md);
   color: var(--color-text);
@@ -10,7 +10,7 @@
 }
 
 .dialog::backdrop {
-  background: rgba(33, 29, 23, 0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .dialog[open] {
@@ -29,20 +29,15 @@
 }
 
 .title {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-4);
   font-family: var(--font-serif);
   font-weight: var(--weight-bold);
   font-size: var(--text-md);
 }
 
-.description {
-  margin: 0 0 var(--space-5);
-  color: var(--color-text-muted);
-}
-
 .actions {
   display: flex;
-  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-3);
+  margin-top: var(--space-5);
 }
