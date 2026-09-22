@@ -17,6 +17,23 @@
   flex-direction: column;
   height: 100%;
   background: var(--color-panel-secondary);
+  overflow: hidden;
+  transition: width var(--duration-base) var(--easing-standard);
+}
+
+.collapsed {
+  width: 0;
+}
+
+.collapsed .topRow,
+.collapsed .searchRow,
+.collapsed .list,
+.collapsed .settings {
+  /* Keep the panel's own content from reflowing to the squeezed width mid-transition; it just
+     clips against the parent's `overflow: hidden` instead (the filter dialog, also a child of
+     `.panel`, manages its own width and is intentionally left alone here). */
+  width: 320px;
+  flex-shrink: 0;
 }
 
 .topRow {

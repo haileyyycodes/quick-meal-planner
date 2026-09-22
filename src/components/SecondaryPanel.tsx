@@ -18,7 +18,14 @@ import styles from './SecondaryPanel.module.css';
 
 const RECIPE_CONTEXT_PATTERN = /^\/recipes\/(\d+)(?:\/edit)?$/;
 
-export function SecondaryPanel() {
+type SecondaryPanelProps = {
+  id?: string;
+  /** Collapses the panel to reclaim width without unmounting it, so its in-flight queries and
+   * list/settings mode survive being hidden and shown again (e.g. in a narrow side-by-side tab). */
+  collapsed?: boolean;
+};
+
+export function SecondaryPanel({ id, collapsed }: SecondaryPanelProps) {
   const pathname = usePathname();
   const recipeId = pathname.match(RECIPE_CONTEXT_PATTERN)?.[1] ?? null;
   const { isFormActive } = useNavigationGuard();
@@ -72,7 +79,12 @@ export function SecondaryPanel() {
   });
 
   return (
-    <div className={styles.panel}>
+    <div
+      id={id}
+      className={collapsed ? `${styles.panel} ${styles.collapsed}` : styles.panel}
+      aria-hidden={collapsed || undefined}
+      inert={collapsed || undefined}
+    >
       <div className={styles.topRow}>
         <button
           type="button"

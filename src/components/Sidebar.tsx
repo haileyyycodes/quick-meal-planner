@@ -2,16 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { List } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, List } from '@phosphor-icons/react';
 import { IconRail } from './IconRail';
 import { SecondaryPanel } from './SecondaryPanel';
 import styles from './Sidebar.module.css';
 
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const SECONDARY_PANEL_ID = 'secondary-panel';
 
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
   const panelRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -89,7 +91,18 @@ export function Sidebar() {
         className={mobileOpen ? `${styles.sidebar} ${styles.sidebarOpen}` : styles.sidebar}
       >
         <IconRail />
-        <SecondaryPanel />
+        <button
+          type="button"
+          className={styles.panelToggle}
+          aria-expanded={!panelCollapsed}
+          aria-controls={SECONDARY_PANEL_ID}
+          data-tooltip={panelCollapsed ? 'Show panel' : 'Hide panel'}
+          onClick={() => setPanelCollapsed((collapsed) => !collapsed)}
+        >
+          {panelCollapsed ? <CaretRight size={14} aria-hidden="true" /> : <CaretLeft size={14} aria-hidden="true" />}
+          <span className={styles.srOnly}>{panelCollapsed ? 'Show recipe panel' : 'Hide recipe panel'}</span>
+        </button>
+        <SecondaryPanel id={SECONDARY_PANEL_ID} collapsed={panelCollapsed} />
       </aside>
     </>
   );

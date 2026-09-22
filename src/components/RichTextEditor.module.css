@@ -99,3 +99,12 @@
   color: var(--color-primary);
   text-decoration: underline;
 }
+
+/* Instructions/Notes set a tall minHeight for the desktop-width card; cap it in a narrow
+   container (a phone, or a side-by-side tab) so the editor doesn't force a wall of empty
+   scrolling before the rest of the form is reachable. */
+@container (max-width: 480px) {
+  .editorContent {
+    min-height: min(var(--content-min-height, 2.5rem), 220px);
+  }
+}

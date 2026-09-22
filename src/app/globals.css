@@ -192,7 +192,9 @@ button, input, select, textarea {
   outline: none;
 }
 
-@media (max-width: 640px) {
+/* @container, not @media: reacts to the room actually left next to the sidebar, not the raw
+   viewport width, so a narrow side-by-side tab gets the same compact padding as a phone. */
+@container (max-width: 640px) {
   main {
     padding: var(--space-6) var(--space-4) var(--space-8);
   }
