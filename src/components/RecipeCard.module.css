@@ -139,8 +139,14 @@
   color: var(--color-text-secondary);
 }
 
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .card {
     padding: var(--space-5);
+  }
+}
+
+@container (max-width: 420px) {
+  .card {
+    padding: var(--space-4);
   }
 }

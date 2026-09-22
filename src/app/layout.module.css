@@ -6,6 +6,10 @@
 .content {
   flex: 1;
   min-width: 0;
+  /* Lets descendants (the recipe form, its cards) react to the space actually left over next to
+     the sidebar via @container, instead of the full viewport width — the two diverge whenever
+     the sidebar's fixed-width rail + panel eat into a narrow window (e.g. a side-by-side tab). */
+  container-type: inline-size;
 }
 
 @media (max-width: 640px) {

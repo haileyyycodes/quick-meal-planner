@@ -95,7 +95,7 @@
   border: 0;
 }
 
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .ingredientRowHeader {
     display: none;
   }
@@ -106,6 +106,14 @@
   }
 
   .ingredientRowGrid {
+    /* `flex: 1 1 480px` on `.ingredientRowGrid` sizes its WIDTH when `.ingredientRow` is a row
+       flex container (the desktop case). Once `.ingredientRow` switches to `flex-direction:
+       column` just above, that same 480px basis gets reinterpreted as a preferred HEIGHT, which
+       inflates this grid to 480px tall and (via grid's default stretch alignment) spreads the
+       excess evenly across its 4 auto rows — every field balloons to ~114px. Reset it here so
+       the stack sizes to its own content instead.
+    */
+    flex: 0 1 auto;
     grid-template-columns: 1fr;
   }
 
